@@ -10,6 +10,7 @@ dependencies = [
   "dj-database-url",
   "gunicorn",
   "whitenoise",
+  "django-bootstrap5>=25.2",
 ]
 
 [dependency-groups]
