@@ -1,0 +1,6 @@
+line-length = 88
+exclude = [
+    "migrations",
+    "task_manager/settings.py",
+    ".venv",
+]
