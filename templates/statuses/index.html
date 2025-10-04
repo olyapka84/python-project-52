@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Статусы</h1>
+
+<p><a class="btn btn-primary" href="{% url 'statuses_create' %}">Создать статус</a></p>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Название</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for st in statuses %}
+    <tr>
+      <td>{{ st.id }}</td>
+      <td>{{ st.name }}</td>
+      <td class="text-end">
+        <a class="btn btn-sm btn-outline-secondary" href="{% url 'statuses_update' st.pk %}">Изменить</a>
+        <a class="btn btn-sm btn-outline-danger" href="{% url 'statuses_delete' st.pk %}">Удалить</a>
+      </td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="3">Пока нет статусов.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
