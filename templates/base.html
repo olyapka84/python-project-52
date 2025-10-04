@@ -25,7 +25,11 @@
             <li class="nav-item"><a class="nav-link" href="{% url 'users:create' %}">Регистрация</a></li>
             {% endif %}
             <li class="nav-item"><a class="nav-link" href="{% url 'users:list' %}">Пользователи</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'statuses_index' %}">Статусы</a></li>
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+            <a class="nav-link" href="{% url 'statuses_index' %}">Статусы</a>
+            </li>
+            {% endif %}
           </ul>
         </div>
       </div>
