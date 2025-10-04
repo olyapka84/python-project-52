@@ -30,7 +30,7 @@ class OnlySelfMixin(UserPassesTestMixin):
 class UserCreateView(CreateView):
     form_class = CustomUserCreationForm
     template_name = "users/create.html"
-    success_url = reverse_lazy("users:list")
+    success_url = reverse_lazy("users:login")
 
     def form_valid(self, form):
         response = super().form_valid(form)

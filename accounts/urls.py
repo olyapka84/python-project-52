@@ -1,6 +1,5 @@
 # accounts/urls.py
 from django.urls import path
-from django.contrib.auth.views import LoginView
 from .views import UserListView, UserUpdateView, UserDeleteView, UserCreateView, UserLogoutView, UserLoginView
 
 app_name = "users"
