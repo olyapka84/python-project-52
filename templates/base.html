@@ -15,15 +15,22 @@
         <a class="navbar-brand" href="/">Менеджер Задач</a>
         <div>
           <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            {% if user.is_authenticated %}
+            <form method="post" action="{% url 'users:logout' %}">
+            {% csrf_token %}
+            <button class="btn btn-outline-light btn-sm" type="submit">Выйти</button>
+            </form>
+            {% else %}
             <li class="nav-item"><a class="nav-link" href="{% url 'users:login' %}">Вход</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'users:create' %}">Регистрация</a></li>
+            {% endif %}
             <li class="nav-item"><a class="nav-link" href="{% url 'users:list' %}">Пользователи</a></li>
           </ul>
         </div>
       </div>
     </nav>
-
     <main class="container">
+        {% bootstrap_messages %}
       {% block content %}{% endblock %}
     </main>
   </body>
