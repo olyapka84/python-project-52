@@ -21,3 +21,7 @@ lint:
 
 test:
 	uv run pytest -v
+
+start-server:
+	@echo ">>> using uv run from repo Makefile <<<"
+	uv run python manage.py runserver 0.0.0.0:3000
