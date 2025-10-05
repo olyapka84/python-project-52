@@ -1,0 +1,122 @@
+# tests/test_tasks_crud.py
+import pytest
+from django.contrib.auth.models import User
+from statuses.models import Status
+from tasks.models import Task
+
+
+@pytest.fixture
+def users(db):
+    pwd = "p12345678"
+    u1 = User.objects.create_user(username="user1", password=pwd)
+    u2 = User.objects.create_user(username="user2", password=pwd)
+    return {"u1": u1, "u2": u2, "pwd": pwd}
+
+
+@pytest.fixture
+def auth_client(users):
+    from django.test import Client
+    c = Client()
+    c.login(username="user1", password=users["pwd"])
+    return c
+
+
+@pytest.fixture
+def status_new(db):
+    return Status.objects.create(name="новый")
+
+
+# ---- Доступ ----
+@pytest.mark.django_db
+def test_login_required(client):
+    r = client.get("/tasks/")
+    assert r.status_code in (302, 301)  # редирект на users:login
+
+
+# ---- Список ----
+@pytest.mark.django_db
+def test_list(auth_client, users, status_new):
+    Task.objects.create(name="Тестовая задача", description="Описание",
+                        status=status_new, author=users["u1"])
+    Task.objects.create(name="Вторая", description="Ещё одна",
+                        status=status_new, author=users["u1"])
+    r = auth_client.get("/tasks/")
+    assert r.status_code == 200
+    html = r.content.decode()
+    assert "Тестовая задача" in html
+    assert "Вторая" in html
+
+
+# ---- Создание ----
+@pytest.mark.django_db
+def test_create(auth_client, users, status_new):
+    resp = auth_client.post("/tasks/create/", data={
+        "name": "Новая задача",
+        "description": "Что-то сделать",
+        "status": status_new.pk,
+        "executor": users["u2"].pk,  # можно и не указывать
+    })
+    assert resp.status_code in (302, 301)
+    assert Task.objects.filter(name="Новая задача",
+                               status=status_new,
+                               author=users["u1"]).exists()
+
+
+# ---- Обновление ----
+@pytest.mark.django_db
+def test_update(auth_client, users, status_new):
+    t = Task.objects.create(name="Черновик", description="Описание",
+                            status=status_new, author=users["u1"])
+    resp = auth_client.post(f"/tasks/{t.pk}/update/", data={
+        "name": "Изменено",
+        "description": "Новое описание",
+        "status": status_new.pk,
+        "executor": users["u2"].pk,
+    })
+    assert resp.status_code in (302, 301)
+    t.refresh_from_db()
+    assert t.name == "Изменено"
+    assert t.description == "Новое описание"
+    assert t.executor == users["u2"]
+
+
+# ---- Просмотр ----
+@pytest.mark.django_db
+def test_view(auth_client, users, status_new):
+    t = Task.objects.create(name="Посмотреть", description="Детали",
+                            status=status_new, author=users["u1"])
+    r = auth_client.get(f"/tasks/{t.pk}/")
+    assert r.status_code == 200
+    html = r.content.decode()
+    assert "Посмотреть" in html
+    assert "Детали" in html
+
+
+# ---- Удаление ----
+@pytest.mark.django_db
+def test_delete(auth_client, users, status_new):
+    t = Task.objects.create(name="Удалить", description="Ненужная",
+                            status=status_new, author=users["u1"])
+    r_get = auth_client.get(f"/tasks/{t.pk}/delete/")
+    assert r_get.status_code == 200
+    r_post = auth_client.post(f"/tasks/{t.pk}/delete/")
+    assert r_post.status_code in (302, 301)
+    assert not Task.objects.filter(pk=t.pk).exists()
+
+
+@pytest.mark.django_db
+def test_only_author_can_delete(auth_client, users, status_new):
+    t = Task.objects.create(
+        name="Чужая задача", description="...",
+        status=status_new, author=users["u2"]
+    )
+    r = auth_client.post(f"/tasks/{t.pk}/delete/")
+    assert r.status_code in (302, 301)
+    assert Task.objects.filter(pk=t.pk).exists()
+
+    from django.test import Client
+    c = Client()
+    c.login(username="user2", password=users["pwd"])
+    r2 = c.post(f"/tasks/{t.pk}/delete/")
+    assert r2.status_code in (302, 301)
+    assert not Task.objects.filter(pk=t.pk).exists()

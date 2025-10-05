@@ -7,6 +7,8 @@ from django.shortcuts import redirect
 from django.views.generic import ListView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
+
+from tasks.models import Task
 from .forms import CustomUserCreationForm
 
 
@@ -50,14 +52,30 @@ class UserUpdateView(LoginRequiredMixin, OnlySelfMixin, UpdateView):
         return response
 
 
-class UserDeleteView(LoginRequiredMixin, OnlySelfMixin, DeleteView):
+class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = User
-    template_name = "users/delete.html"
+    template_name = "users/confirm_delete.html"
     success_url = reverse_lazy("users:list")
+    login_url = "users:login"
 
-    def delete(self, request, *args, **kwargs):
-        messages.success(self.request, "Пользователь успешно удалён.")
-        return super().delete(request, *args, **kwargs)
+    def test_func(self):
+        return self.get_object().pk == self.request.user.pk
+
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            messages.error(self.request, "Можно удалять только свой аккаунт.")
+            return redirect("users:list")
+        return super().handle_no_permission()
+
+    def dispatch(self, request, *args, **kwargs):
+        user = self.get_object()
+        if hasattr(user, "created_tasks") and user.created_tasks.exists():
+            messages.error(request, "Нельзя удалить пользователя, связанного с задачами.")
+            return redirect("users:list")
+        if hasattr(user, "executed_tasks") and user.executed_tasks.exists():
+            messages.error(request, "Нельзя удалить пользователя, связанного с задачами.")
+            return redirect("users:list")
+        return super().dispatch(request, *args, **kwargs)
 
 
 class UserLoginView(LoginView):

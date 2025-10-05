@@ -1,9 +1,11 @@
 # tests/test_statuses_simple.py
 import pytest
 from django.contrib.auth.models import User
+from django.db.models import ProtectedError
 from django.test import Client
 
 from statuses.models import Status
+from tasks.models import Task
 
 
 @pytest.fixture
@@ -20,7 +22,6 @@ def auth_client(user):
 
 @pytest.mark.django_db
 def test_login_required(client):
-    # Любая страница из раздела должна уводить на логин
     r1 = client.get("/statuses/")
     r2 = client.get("/statuses/create/")
     assert r1.status_code in (302, 301)
@@ -59,10 +60,23 @@ def test_update(auth_client):
 @pytest.mark.django_db
 def test_delete(auth_client):
     st = Status.objects.create(name="временный")
-    # Страница подтверждения удаления открывается
     get_resp = auth_client.get(f"/statuses/{st.pk}/delete/")
     assert get_resp.status_code == 200
-    # Удаление проходит
     post_resp = auth_client.post(f"/statuses/{st.pk}/delete/")
     assert post_resp.status_code in (302, 301)
     assert not Status.objects.filter(pk=st.pk).exists()
+
+
+@pytest.mark.django_db
+def test_cannot_delete_status_in_use(django_user_model):
+    user = django_user_model.objects.create_user(username="alice", password="p123")
+    status = Status.objects.create(name="новый")
+    Task.objects.create(
+        name="Тестовая задача",
+        description="Проверка связи",
+        status=status,
+        author=user,
+    )
+
+    with pytest.raises(ProtectedError):
+        status.delete()

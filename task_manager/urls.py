@@ -23,4 +23,5 @@ urlpatterns = [
     path("", views.index, name="home"),
     path("users/", include("accounts.urls", namespace="users")),
     path("statuses/", include("statuses.urls")),
+    path("tasks/", include("tasks.urls")),
 ]

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Задачи</h1>
+
+<p><a class="btn btn-primary" href="{% url 'tasks_create' %}">Создать задачу</a></p>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Имя</th>
+      <th>Статус</th>
+      <th>Автор</th>
+      <th>Исполнитель</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for t in tasks %}
+    <tr>
+      <td>{{ t.id }}</td>
+      <td><a href="{% url 'tasks_detail' t.pk %}">{{ t.name }}</a></td>
+      <td>{{ t.status }}</td>
+      <td>{{ t.author }}</td>
+      <td>{{ t.executor|default:"—" }}</td>
+      <td class="text-end">
+        <a class="btn btn-sm btn-outline-secondary" href="{% url 'tasks_update' t.pk %}">Изменить</a>
+        <a class="btn btn-sm btn-outline-danger" href="{% url 'tasks_delete' t.pk %}">Удалить</a>
+      </td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="6">Пока нет задач.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ task.name }}</h1>
+<p><strong>Статус:</strong> {{ task.status }}</p>
+<p><strong>Автор:</strong> {{ task.author }}</p>
+<p><strong>Исполнитель:</strong> {{ task.executor|default:"—" }}</p>
+<hr>
+<p style="white-space: pre-wrap">{{ task.description|default:"(без описания)" }}</p>
+
+<p class="mt-3">
+  <a class="btn btn-outline-secondary" href="{% url 'tasks_update' task.pk %}">Изменить</a>
+  <a class="btn btn-outline-danger" href="{% url 'tasks_delete' task.pk %}">Удалить</a>
+  <a class="btn btn-link" href="{% url 'tasks_index' %}">К списку</a>
+</p>
+{% endblock %}

@@ -12,6 +12,7 @@ dependencies = [
   "whitenoise",
   "django-bootstrap5>=25.2",
   "pytest>=8.4.2",
+  "pytest-django>=4.11.1",
 ]
 
 [dependency-groups]
