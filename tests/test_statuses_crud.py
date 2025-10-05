@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 from django.db.models import ProtectedError
 from django.test import Client
 
-from statuses.models import Status
-from tasks.models import Task
+from task_manager.statuses.models import Status
+from task_manager.tasks.models import Task
 
 
 @pytest.fixture

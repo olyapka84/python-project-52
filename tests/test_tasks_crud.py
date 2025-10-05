@@ -1,8 +1,8 @@
 # tests/test_tasks_crud.py
 import pytest
 from django.contrib.auth.models import User
-from statuses.models import Status
-from tasks.models import Task
+from task_manager.statuses.models import Status
+from task_manager.tasks.models import Task
 
 
 @pytest.fixture
@@ -26,14 +26,12 @@ def status_new(db):
     return Status.objects.create(name="новый")
 
 
-# ---- Доступ ----
 @pytest.mark.django_db
 def test_login_required(client):
     r = client.get("/tasks/")
     assert r.status_code in (302, 301)  # редирект на users:login
 
 
-# ---- Список ----
 @pytest.mark.django_db
 def test_list(auth_client, users, status_new):
     Task.objects.create(name="Тестовая задача", description="Описание",
@@ -47,7 +45,6 @@ def test_list(auth_client, users, status_new):
     assert "Вторая" in html
 
 
-# ---- Создание ----
 @pytest.mark.django_db
 def test_create(auth_client, users, status_new):
     resp = auth_client.post("/tasks/create/", data={
@@ -62,7 +59,6 @@ def test_create(auth_client, users, status_new):
                                author=users["u1"]).exists()
 
 
-# ---- Обновление ----
 @pytest.mark.django_db
 def test_update(auth_client, users, status_new):
     t = Task.objects.create(name="Черновик", description="Описание",
@@ -80,7 +76,6 @@ def test_update(auth_client, users, status_new):
     assert t.executor == users["u2"]
 
 
-# ---- Просмотр ----
 @pytest.mark.django_db
 def test_view(auth_client, users, status_new):
     t = Task.objects.create(name="Посмотреть", description="Детали",
@@ -92,7 +87,6 @@ def test_view(auth_client, users, status_new):
     assert "Детали" in html
 
 
-# ---- Удаление ----
 @pytest.mark.django_db
 def test_delete(auth_client, users, status_new):
     t = Task.objects.create(name="Удалить", description="Ненужная",

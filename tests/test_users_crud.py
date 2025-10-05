@@ -1,8 +1,8 @@
 import pytest
 from django.contrib.auth.models import User
 
-from statuses.models import Status
-from tasks.models import Task
+from task_manager.statuses.models import Status
+from task_manager.tasks.models import Task
 
 
 @pytest.fixture
@@ -154,7 +154,7 @@ def test_only_author_can_delete(auth_client, users, status_new):
 @pytest.mark.django_db
 def test_user_with_tasks_cannot_be_deleted(users, status_new):
     from django.test import Client
-    from tasks.models import Task
+    from task_manager.tasks.models import Task
     from django.contrib.auth.models import User
 
     # у bob есть задача → удалять себя нельзя
