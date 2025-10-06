@@ -1,7 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from .forms import LabelForm
@@ -21,7 +20,7 @@ class LabelCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy("labels:index")
 
     def form_valid(self, form):
-        messages.success(self.request, _("Метка успешно создана"))
+        messages.success(self.request, "Метка успешно создана")
         return super().form_valid(form)
 
 
@@ -32,7 +31,7 @@ class LabelUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy("labels:index")
 
     def form_valid(self, form):
-        messages.success(self.request, _("Метка успешно обновлена"))
+        messages.success(self.request, "Метка успешно обновлена")
         return super().form_valid(form)
 
 
@@ -44,7 +43,7 @@ class LabelDeleteView(LoginRequiredMixin, DeleteView):
     def dispatch(self, request, *args, **kwargs):
         label = self.get_object()
         if label.labeled_tasks.exists():
-            messages.error(request, _("Нельзя удалить метку, так как она связана с задачей"))
+            messages.error(request, "Нельзя удалить метку, так как она связана с задачей")
             return self.get_redirect_url()
         return super().dispatch(request, *args, **kwargs)
 
@@ -53,5 +52,5 @@ class LabelDeleteView(LoginRequiredMixin, DeleteView):
         return redirect("labels:index")
 
     def delete(self, request, *args, **kwargs):
-        messages.success(request, _("Метка успешно удалена"))
+        messages.success(request, "Метка успешно удалена")
         return super().delete(request, *args, **kwargs)
