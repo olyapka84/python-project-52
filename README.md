@@ -8,3 +8,18 @@
 ## Деплой
 
 Приложение доступно по адресу: [https://python-project-52-76f1.onrender.com/](https://python-project-52-76f1.onrender.com/)
+
+## Локальный запуск
+
+1. Установите зависимости из файла `requirements.txt`, который лежит в корне репозитория (`code/requirements.txt` в окружении Hexlet):
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. Выполните миграции и запустите сервер разработки:
+
+   ```bash
+   python manage.py migrate
+   python manage.py runserver 0.0.0.0:8000
+   ```
