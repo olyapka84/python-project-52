@@ -30,7 +30,14 @@
     {% if form.executor.errors %}<div class="text-danger">{{ form.executor.errors|striptags }}</div>{% endif %}
   </div>
 
+  <div class="mb-3">
+    <label for="id_labels" class="form-label">Метки</label>
+    {{ form.labels }}
+  <div class="form-text">Можно выбрать несколько (Ctrl/⌘ + клик).</div>
+  </div>
+
   <button type="submit" class="btn btn-primary">Сохранить</button>
   <a href="{% url 'tasks_index' %}" class="btn btn-link">Отмена</a>
 </form>
+
 {% endblock %}
