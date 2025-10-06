@@ -31,6 +31,8 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = [h for h in os.getenv('ALLOWED_HOSTS', 'webserver').split(',') if h]
 
+CSRF_TRUSTED_ORIGINS = [o for o in os.getenv('CSRF_TRUSTED_ORIGINS', 'https://*.onrender.com').split(',') if o]
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 
@@ -90,7 +92,7 @@ DATABASES = {
     'default': dj_database_url.parse(
         os.getenv('DATABASE_URL', f"sqlite:///{BASE_DIR/'db.sqlite3'}"),
         conn_max_age=600,
-        ssl_require=False
+        ssl_require=os.getenv('DB_SSL_REQUIRE', 'False') == 'True'
     )
 }
 
@@ -133,3 +135,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = "users:login"
 LOGIN_REDIRECT_URL = "users:list"
 LOGOUT_REDIRECT_URL = "users:list"
+
+SECURE_SSL_REDIRECT = (os.getenv('SECURE_SSL_REDIRECT', 'True') == 'True') and not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG

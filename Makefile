@@ -21,4 +21,3 @@ lint:
 
 test:
 	uv run pytest -v
-
