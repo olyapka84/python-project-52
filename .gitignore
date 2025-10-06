@@ -1,37 +1,40 @@
-# Python
+# --- Python ---
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
 *.so
-*.egg-info/
-*.egg
-*.log
 
-# Virtual environments
+# --- Virtual environments ---
 .venv/
 env/
 venv/
 
-# Django
+# --- Django ---
+*.log
 db.sqlite3
-*.sqlite3
-/media/
+media/
 staticfiles/
 
-# Local settings
-.env
-
-# IDE / Editors
-.vscode/
+# --- PyCharm / JetBrains ---
 .idea/
-*.iml
 
-# OS files
+# --- System files ---
 .DS_Store
 Thumbs.db
 
-# Test / coverage
+# --- Tests / Coverage ---
 .coverage
 htmlcov/
 pytest_cache/
+
+# --- uv / pip ---
+poetry.lock
+uv.lock
+*.egg-info/
+dist/
+build/
+
+# --- Shell scripts / temp ---
+*.sh~
+*.swp
