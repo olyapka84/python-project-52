@@ -7,11 +7,13 @@ from django.db.models import ProtectedError
 from .models import Status
 from .forms import StatusForm
 
+
 class StatusListView(LoginRequiredMixin, ListView):
     model = Status
     template_name = "statuses/index.html"
     context_object_name = "statuses"
     login_url = "users:login"
+
 
 class StatusCreateView(LoginRequiredMixin, CreateView):
     model = Status
@@ -23,6 +25,7 @@ class StatusCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         messages.success(self.request, "Статус создан.")
         return super().form_valid(form)
+
 
 class StatusUpdateView(LoginRequiredMixin, UpdateView):
     model = Status
@@ -44,8 +47,9 @@ class StatusDeleteView(LoginRequiredMixin, DeleteView):
 
     def post(self, request, *args, **kwargs):
         try:
-            messages.success(self.request, "Статус удалён.")
-            return super().post(request, *args, **kwargs)
+            response = super().post(request, *args, **kwargs)
+            messages.success(request, "Статус удалён.")
+            return response
         except ProtectedError:
-            messages.error(self.request, "Нельзя удалить статус: есть связанные задачи.")
+            messages.error(request, "Нельзя удалить статус: есть связанные задачи.")
             return self.get(request, *args, **kwargs)
