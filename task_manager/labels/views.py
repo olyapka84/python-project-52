@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.shortcuts import redirect
 
 from .forms import LabelForm
 from .models import Label
@@ -11,6 +12,7 @@ class LabelListView(LoginRequiredMixin, ListView):
     model = Label
     template_name = "labels/index.html"
     context_object_name = "labels"
+    login_url = "users:login"
 
 
 class LabelCreateView(LoginRequiredMixin, CreateView):
@@ -18,6 +20,7 @@ class LabelCreateView(LoginRequiredMixin, CreateView):
     form_class = LabelForm
     template_name = "labels/form.html"
     success_url = reverse_lazy("labels:index")
+    login_url = "users:login"
 
     def form_valid(self, form):
         messages.success(self.request, "Метка успешно создана")
@@ -29,6 +32,7 @@ class LabelUpdateView(LoginRequiredMixin, UpdateView):
     form_class = LabelForm
     template_name = "labels/form.html"
     success_url = reverse_lazy("labels:index")
+    login_url = "users:login"
 
     def form_valid(self, form):
         messages.success(self.request, "Метка успешно обновлена")
@@ -39,17 +43,14 @@ class LabelDeleteView(LoginRequiredMixin, DeleteView):
     model = Label
     template_name = "labels/confirm_delete.html"
     success_url = reverse_lazy("labels:index")
+    login_url = "users:login"
 
     def dispatch(self, request, *args, **kwargs):
         label = self.get_object()
         if label.labeled_tasks.exists():
             messages.error(request, "Нельзя удалить метку, так как она связана с задачей")
-            return self.get_redirect_url()
+            return redirect("labels:index")
         return super().dispatch(request, *args, **kwargs)
-
-    def get_redirect_url(self):
-        from django.shortcuts import redirect
-        return redirect("labels:index")
 
     def delete(self, request, *args, **kwargs):
         messages.success(request, "Метка успешно удалена")
