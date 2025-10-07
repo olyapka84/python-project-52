@@ -3,9 +3,8 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.views import LogoutView, LoginView
 from django.shortcuts import redirect
-from django.views.generic import ListView, UpdateView, DeleteView
+from django.views.generic import ListView, UpdateView, DeleteView, CreateView
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
 
 from .forms import CustomUserCreationForm
 
@@ -23,6 +22,8 @@ class OnlySelfMixin(UserPassesTestMixin):
         return self.request.user.is_authenticated and obj.pk == self.request.user.pk
 
     def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
         messages.error(self.request, "У вас нет прав для изменения другого пользователя.")
         return redirect("users:list")
 
@@ -38,7 +39,7 @@ class UserCreateView(CreateView):
         return response
 
 
-class UserUpdateView(LoginRequiredMixin, OnlySelfMixin, UpdateView):
+class UserUpdateView(OnlySelfMixin, UpdateView):
     model = User
     fields = ["username", "first_name", "last_name"]
     template_name = "users/update.html"
@@ -47,41 +48,33 @@ class UserUpdateView(LoginRequiredMixin, OnlySelfMixin, UpdateView):
     def get_object(self, queryset=None):
         return self.request.user
 
+    def handle_no_permission(self):
+        messages.error(self.request, "У вас нет прав для изменения другого пользователя.")
+        return redirect("users:list")
+
     def form_valid(self, form):
         response = super().form_valid(form)
         messages.success(self.request, "Изменения успешно сохранены.")
         return response
 
 
-class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class UserDeleteView(LoginRequiredMixin, OnlySelfMixin, DeleteView):
     model = User
     template_name = "users/confirm_delete.html"
     success_url = reverse_lazy("users:list")
     login_url = "users:login"
 
-    def test_func(self):
-        return self.get_object().pk == self.request.user.pk
-
-    def handle_no_permission(self):
-        if self.request.user.is_authenticated:
-            messages.error(self.request, "Можно удалять только свой аккаунт.")
-            return redirect("users:list")
-        return super().handle_no_permission()
-
     def dispatch(self, request, *args, **kwargs):
         user = self.get_object()
-        if hasattr(user, "created_tasks") and user.created_tasks.exists():
-            messages.error(request, "Нельзя удалить пользователя, связанного с задачами.")
-            return redirect("users:list")
-        if hasattr(user, "executed_tasks") and user.executed_tasks.exists():
+        if user.created_tasks.exists() or user.executed_tasks.exists():
             messages.error(request, "Нельзя удалить пользователя, связанного с задачами.")
             return redirect("users:list")
         return super().dispatch(request, *args, **kwargs)
 
 
 class UserLoginView(LoginView):
-    template_name = 'users/login.html'
-    next_page = reverse_lazy('home')  # куда редиректить после входа
+    template_name = "users/login.html"
+    next_page = reverse_lazy("home")
 
     def form_valid(self, form):
         messages.success(self.request, "Вы успешно залогинены.")
@@ -89,9 +82,8 @@ class UserLoginView(LoginView):
 
 
 class UserLogoutView(LogoutView):
-    next_page = reverse_lazy('home')
+    next_page = reverse_lazy("home")
 
     def dispatch(self, request, *args, **kwargs):
         messages.info(request, "Вы успешно разлогинены.")
         return super().dispatch(request, *args, **kwargs)
-
