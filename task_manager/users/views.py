@@ -64,6 +64,10 @@ class UserDeleteView(LoginRequiredMixin, OnlySelfMixin, DeleteView):
     success_url = reverse_lazy("users:list")
     login_url = "users:login"
 
+    def handle_no_permission(self):
+        messages.error(self.request, "Вы не авторизованы! Пожалуйста, выполните вход.")
+        return super().handle_no_permission()
+
     def dispatch(self, request, *args, **kwargs):
         user = self.get_object()
         if user.created_tasks.exists() or user.executed_tasks.exists():
