@@ -30,14 +30,9 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
     login_url = "users:login"
 
     def form_valid(self, form):
-        obj = form.save(commit=False)
-        obj.author = self.request.user
-        obj.save()
+        form.instance.author = self.request.user
         messages.success(self.request, "Задача создана.")
         return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy("tasks_index")
 
 
 class TaskUpdateView(LoginRequiredMixin, UpdateView):
