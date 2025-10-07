@@ -1,4 +1,3 @@
-# users/views.py
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -36,18 +35,6 @@ class UserCreateView(CreateView):
     def form_valid(self, form):
         response = super().form_valid(form)
         messages.success(self.request, "Пользователь успешно создан.")
-        return response
-
-
-class UserUpdateView(LoginRequiredMixin, OnlySelfMixin, UpdateView):
-    model = User
-    fields = ["username", "first_name", "last_name"]
-    template_name = "users/update.html"
-    success_url = reverse_lazy("users:list")
-
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        messages.success(self.request, "Изменения успешно сохранены.")
         return response
 
 
