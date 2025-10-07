@@ -34,7 +34,7 @@ def test_label_create_ok(client, django_user_model):
     resp = client.post(url, {"name": "bug"})
     assert resp.status_code == 302
     obj = Label.objects.get(name="bug")
-    assert obj.name == "bug"  # имя поля формы совпадает с демо: "name"
+    assert obj.name == "bug"
 
 
 @pytest.mark.django_db
@@ -53,7 +53,6 @@ def test_label_update_ok(client, django_user_model):
 
 @pytest.mark.django_db
 def test_label_delete_blocked_when_in_use(client, django_user_model):
-    """Нельзя удалить метку, если она связана с задачей."""
     user = django_user_model.objects.create_user(username="u", password="p")
     client.login(username="u", password="p")
 
@@ -63,11 +62,11 @@ def test_label_delete_blocked_when_in_use(client, django_user_model):
     t.labels.add(l)
 
     url = reverse("labels:delete", args=[l.pk])
-    resp_get = client.get(url)           # страница подтверждения не должна падать
+    resp_get = client.get(url)
     assert resp_get.status_code in (200, 302)
 
-    resp_post = client.post(url)         # попытка удалить
-    assert resp_post.status_code == 302  # редирект назад к списку
+    resp_post = client.post(url)
+    assert resp_post.status_code == 302
     assert Label.objects.filter(pk=l.pk).exists()
 
 

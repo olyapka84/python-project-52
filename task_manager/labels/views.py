@@ -49,7 +49,7 @@ class LabelDeleteView(LoginRequiredMixin, DeleteView):
         label = self.get_object()
         if label.labeled_tasks.exists():
             messages.error(request, "Нельзя удалить метку: есть связанные задачи.")
-            return self.get(request, *args, **kwargs)
+            return redirect("labels:index")
         response = super().post(request, *args, **kwargs)
         messages.success(request, "Метка удалена.")
         return response
