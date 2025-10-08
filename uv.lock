@@ -109,7 +109,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "dj-database-url" },
-    { name = "django", specifier = ">=5,<6" },
+    { name = "django", specifier = ">=5.2.4" },
     { name = "django-bootstrap5", specifier = ">=25.2" },
     { name = "gunicorn" },
     { name = "psycopg2-binary", specifier = ">=2.9.10" },
