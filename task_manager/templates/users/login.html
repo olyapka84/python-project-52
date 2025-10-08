@@ -3,18 +3,37 @@
 
 {% block content %}
   <h1 class="mb-4">Вход</h1>
-  <!-- ЯВНО шлём POST на /login/ (name="login") -->
   <form method="post" action="{% url 'login' %}" class="w-100" style="max-width: 420px;">
     {% csrf_token %}
     {{ form.non_field_errors }}
+
     <div class="mb-3">
       <label for="id_username" class="form-label">Имя пользователя</label>
-      {{ form.username }}
+      <input
+        type="text"
+        name="{{ form.username.name }}"
+        id="id_username"
+        class="form-control"
+        placeholder="Имя пользователя"
+        value="{{ form.username.value|default_if_none:'' }}"
+        required
+      >
+      {{ form.username.errors }}
     </div>
+
     <div class="mb-3">
       <label for="id_password" class="form-label">Пароль</label>
-      {{ form.password }}
+      <input
+        type="password"
+        name="{{ form.password.name }}"
+        id="id_password"
+        class="form-control"
+        placeholder="Пароль"
+        required
+      >
+      {{ form.password.errors }}
     </div>
-    <button type="submit" class="btn btn-primary" aria-label="Войти">Вход</button>
+
+    <button type="submit" class="btn btn-primary">Вход</button>
   </form>
 {% endblock %}
