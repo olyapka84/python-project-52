@@ -6,7 +6,7 @@ from django.shortcuts import redirect
 from django.views.generic import ListView, UpdateView, DeleteView, CreateView
 from django.urls import reverse_lazy
 
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, CustomAuthenticationForm
 
 
 class UserListView(ListView):
@@ -78,6 +78,7 @@ class UserDeleteView(LoginRequiredMixin, OnlySelfMixin, DeleteView):
 
 class UserLoginView(LoginView):
     template_name = "users/login.html"
+    form_class = CustomAuthenticationForm
     next_page = reverse_lazy("home")
 
     def form_valid(self, form):

@@ -137,6 +137,7 @@ LOGIN_URL = "users:login"
 LOGIN_REDIRECT_URL = "users:list"
 LOGOUT_REDIRECT_URL = "users:list"
 
-SECURE_SSL_REDIRECT = (os.getenv('SECURE_SSL_REDIRECT', 'True') == 'True') and not DEBUG
-SESSION_COOKIE_SECURE = not DEBUG
-CSRF_COOKIE_SECURE = not DEBUG
+SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', str(not DEBUG)) == 'True'
+SESSION_COOKIE_SECURE = os.getenv('SESSION_COOKIE_SECURE', str(not DEBUG)) == 'True'
+CSRF_COOKIE_SECURE = os.getenv('CSRF_COOKIE_SECURE', str(not DEBUG)) == 'True'
+
