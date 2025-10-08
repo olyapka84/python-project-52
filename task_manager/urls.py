@@ -16,12 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
+
 from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", views.index, name="home"),
     path("users/", include("task_manager.users.urls", namespace="users")),
+    path("login/", RedirectView.as_view(pattern_name="users:login", permanent=False), name="login"),
     path("statuses/", include("task_manager.statuses.urls")),
     path("tasks/", include("task_manager.tasks.urls")),
     path("labels/", include("task_manager.labels.urls")),
