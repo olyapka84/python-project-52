@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 
 
 class CustomUserCreationForm(UserCreationForm):
-    first_name = forms.CharField(label='Имя', max_length=150, required=False)
-    last_name = forms.CharField(label='Фамилия', max_length=150, required=False)
+    first_name = forms.CharField(label='Имя', max_length=150, required=True)
+    last_name = forms.CharField(label='Фамилия', max_length=150, required=True)
 
     class Meta(UserCreationForm.Meta):
         model = User
