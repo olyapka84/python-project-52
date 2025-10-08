@@ -3,7 +3,8 @@
 
 {% block content %}
   <h1 class="mb-4">Вход</h1>
-  <form method="post" class="w-100" style="max-width: 420px;">
+  <!-- ЯВНО шлём POST на /login/ (name="login") -->
+  <form method="post" action="{% url 'login' %}" class="w-100" style="max-width: 420px;">
     {% csrf_token %}
     {{ form.non_field_errors }}
     <div class="mb-3">

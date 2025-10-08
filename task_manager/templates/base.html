@@ -17,7 +17,7 @@
           <ul class="navbar-nav me-auto mb-2 mb-md-0 align-items-center">
             {% if user.is_authenticated %}
               <li class="nav-item">
-                <form method="post" action="{% url 'users:logout' %}" class="d-inline m-0">
+                <form method="post" action="{% url 'logout' %}" class="d-inline m-0">
                   {% csrf_token %}
                   <button type="submit" class="btn btn-link nav-link px-2 py-2">
                     Выход
@@ -26,7 +26,7 @@
               </li>
             {% else %}
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'users:login' %}">Вход</a>
+                <a class="nav-link" href="{% url 'login' %}">Вход</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'users:create' %}">Регистрация</a>
