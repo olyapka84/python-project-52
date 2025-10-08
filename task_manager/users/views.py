@@ -1,12 +1,13 @@
-from django.contrib.auth import logout
+from django import forms
+from django.contrib import messages
+from django.contrib.auth import logout, password_validation
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
-from django.contrib import messages
-from django.contrib.auth.views import LogoutView, LoginView
+from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect
+from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, UpdateView, DeleteView, CreateView
-from django.urls import reverse_lazy
 
 from .forms import CustomUserCreationForm, CustomAuthenticationForm
 
@@ -54,9 +55,36 @@ class UserUpdateView(OnlySelfMixin, UpdateView):
         messages.error(self.request, "У вас нет прав для изменения другого пользователя.")
         return redirect("users:list")
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["password1"] = forms.CharField(
+            label="Пароль",
+            required=False,
+            widget=forms.PasswordInput(attrs={"class": "form-control"}),
+            help_text=password_validation.password_validators_help_text_html(),
+        )
+        form.fields["password2"] = forms.CharField(
+            label="Подтверждение пароля",
+            required=False,
+            widget=forms.PasswordInput(attrs={"class": "form-control"}),
+            help_text="Для подтверждения введите, пожалуйста, пароль ещё раз.",
+        )
+        return form
+
     def form_valid(self, form):
+        p1 = form.cleaned_data.get("password1")
+        p2 = form.cleaned_data.get("password2")
+        if p1 or p2:
+            if not p1 or not p2:
+                form.add_error("password2", "Пожалуйста, введите пароль дважды.")
+                return self.form_invalid(form)
+            if p1 != p2:
+                form.add_error("password2", "Введённые пароли не совпадают.")
+                return self.form_invalid(form)
+            password_validation.validate_password(p1, self.object)
+            form.instance.set_password(p1)
         response = super().form_valid(form)
-        messages.success(self.request, "Изменения успешно сохранены.")
+        messages.success(self.request, "Пользователь успешно изменён")
         return response
 
 
@@ -72,7 +100,8 @@ class UserDeleteView(LoginRequiredMixin, OnlySelfMixin, DeleteView):
 
     def dispatch(self, request, *args, **kwargs):
         user = self.get_object()
-        if user.created_tasks.exists() or user.executed_tasks.exists():
+        if hasattr(user, "created_tasks") and user.created_tasks.exists() or \
+           hasattr(user, "executed_tasks") and user.executed_tasks.exists():
             messages.error(request, "Нельзя удалить пользователя, связанного с задачами.")
             return redirect("users:list")
         return super().dispatch(request, *args, **kwargs)
