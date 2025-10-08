@@ -1,8 +1,10 @@
+from django.contrib.auth import logout
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.views import LogoutView, LoginView
 from django.shortcuts import redirect
+from django.views import View
 from django.views.generic import ListView, UpdateView, DeleteView, CreateView
 from django.urls import reverse_lazy
 
@@ -86,9 +88,13 @@ class UserLoginView(LoginView):
         return super().form_valid(form)
 
 
-class UserLogoutView(LogoutView):
-    next_page = reverse_lazy("home")
+class UserLogoutView(View):
+    def post(self, request, *args, **kwargs):
+        logout(request)
+        messages.success(request, "Вы разлогинены")
+        return redirect("home")
 
-    def dispatch(self, request, *args, **kwargs):
-        messages.info(request, "Вы разлогинены")
-        return super().dispatch(request, *args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        messages.success(request, "Вы разлогинены")
+        return redirect("home")
