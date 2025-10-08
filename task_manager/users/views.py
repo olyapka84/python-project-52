@@ -100,11 +100,15 @@ class UserDeleteView(LoginRequiredMixin, OnlySelfMixin, DeleteView):
 
     def dispatch(self, request, *args, **kwargs):
         user = self.get_object()
-        if hasattr(user, "created_tasks") and user.created_tasks.exists() or \
-           hasattr(user, "executed_tasks") and user.executed_tasks.exists():
+        if (hasattr(user, "created_tasks") and user.created_tasks.exists()) or \
+           (hasattr(user, "executed_tasks") and user.executed_tasks.exists()):
             messages.error(request, "Нельзя удалить пользователя, связанного с задачами.")
             return redirect("users:list")
         return super().dispatch(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, "Пользователь успешно удален")
+        return super().delete(request, *args, **kwargs)
 
 
 class UserLoginView(LoginView):
