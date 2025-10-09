@@ -4,6 +4,38 @@
 
 <p><a class="btn btn-primary" href="{% url 'tasks_create' %}">Создать задачу</a></p>
 
+{# Форма фильтров #}
+<form method="get" class="row g-2 align-items-end mb-3">
+  <div class="col-sm-3">
+    <label for="id_status" class="form-label">Статус</label>
+    {{ filter.form.status }}
+  </div>
+
+  <div class="col-sm-3">
+    <label for="id_executor" class="form-label">Исполнитель</label>
+    {{ filter.form.executor }}
+  </div>
+
+  <div class="col-sm-3">
+    <label for="id_label" class="form-label">Метка</label>
+    {{ filter.form.label }}
+  </div>
+
+  <div class="col-sm-3">
+    <div class="form-check mt-4">
+      {{ filter.form.self_tasks }}
+      <label class="form-check-label" for="{{ filter.form.self_tasks.id_for_label }}">
+        Только свои задачи
+      </label>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary">Показать</button>
+  </div>
+</form>
+
+
 <table class="table table-striped align-middle">
   <thead>
     <tr>
@@ -21,8 +53,14 @@
       <td>{{ t.id }}</td>
       <td><a href="{% url 'tasks_detail' t.pk %}">{{ t.name }}</a></td>
       <td>{{ t.status }}</td>
-      <td>{{ t.author }}</td>
-      <td>{{ t.executor|default:"—" }}</td>
+      <td>{{ t.author.get_full_name|default:t.author.username }}</td>
+      <td>
+      {% if t.executor %}
+      {{ t.executor.get_full_name|default:t.executor.username }}
+      {% else %}
+      —
+      {% endif %}
+    </td>
       <td class="text-end">
         <a class="btn btn-sm btn-outline-secondary" href="{% url 'tasks_update' t.pk %}">Изменить</a>
         <a class="btn btn-sm btn-outline-danger" href="{% url 'tasks_delete' t.pk %}">Удалить</a>

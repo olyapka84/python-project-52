@@ -21,6 +21,7 @@ dependencies = [
   "pytest>=8.4.2",
   "pytest-django>=4.11.1",
   "psycopg2-binary>=2.9.10",
+  "django-filter>=25.2",
 ]
 
 [dependency-groups]
