@@ -106,9 +106,9 @@ class UserDeleteView(LoginRequiredMixin, OnlySelfMixin, DeleteView):
             return redirect("users:list")
         return super().dispatch(request, *args, **kwargs)
 
-    def delete(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         messages.success(request, "Пользователь успешно удален")
-        return super().delete(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
 
 
 class UserLoginView(LoginView):
