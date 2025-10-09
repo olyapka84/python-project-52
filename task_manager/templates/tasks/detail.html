@@ -1,11 +1,34 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>{{ task.name }}</h1>
+
 <p><strong>Статус:</strong> {{ task.status }}</p>
-<p><strong>Автор:</strong> {{ task.author }}</p>
-<p><strong>Исполнитель:</strong> {{ task.executor|default:"—" }}</p>
+
+<p><strong>Автор:</strong>
+  {% if task.author.get_full_name %}
+    {{ task.author.get_full_name }}
+  {% else %}
+    {{ task.author.username }}
+  {% endif %}
+</p>
+
+<p><strong>Исполнитель:</strong>
+  {% if task.executor %}
+    {% if task.executor.get_full_name %}
+      {{ task.executor.get_full_name }}
+    {% else %}
+      {{ task.executor.username }}
+    {% endif %}
+  {% else %}
+    —
+  {% endif %}
+</p>
+
 <hr>
-<p style="white-space: pre-wrap">{{ task.description|default:"(без описания)" }}</p>
+
+<p style="white-space: pre-wrap">
+  {{ task.description|default:"(без описания)" }}
+</p>
 
 {% if task.labels.exists %}
   <p><strong>Метки:</strong>
