@@ -35,7 +35,7 @@ class LabelUpdateView(LoginRequiredMixin, UpdateView):
     login_url = "users:login"
 
     def form_valid(self, form):
-        messages.success(self.request, "Метка успешно обновлена")
+        messages.success(self.request, "Метка успешно изменена")
         return super().form_valid(form)
 
 
@@ -48,8 +48,9 @@ class LabelDeleteView(LoginRequiredMixin, DeleteView):
     def post(self, request, *args, **kwargs):
         label = self.get_object()
         if label.labeled_tasks.exists():
-            messages.error(request, "Нельзя удалить метку: есть связанные задачи.")
+            messages.error(request, "Невозможно удалить метку, потому что она используется")
             return redirect("labels:index")
+
         response = super().post(request, *args, **kwargs)
-        messages.success(request, "Метка удалена.")
+        messages.success(request, "Метка успешно удалена")
         return response
