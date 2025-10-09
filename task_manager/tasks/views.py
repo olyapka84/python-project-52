@@ -69,10 +69,10 @@ class TaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def handle_no_permission(self):
         if self.request.user.is_authenticated:
-            messages.error(self.request, "Задачу может удалить только ее автор")
+            messages.error(self.request, "Удалять задачу может только её автор.")
             return redirect("tasks_index")
         return super().handle_no_permission()
 
-    def delete(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         messages.success(self.request, "Задача успешно удалена")
-        return super().delete(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
