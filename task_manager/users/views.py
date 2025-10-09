@@ -26,6 +26,7 @@ class OnlySelfMixin(UserPassesTestMixin):
 
     def handle_no_permission(self):
         if not self.request.user.is_authenticated:
+            messages.error(self.request, "Вы не авторизованы! Пожалуйста, выполните вход.")
             return super().handle_no_permission()
         messages.error(self.request, "У вас нет прав для изменения другого пользователя.")
         return redirect("users:list")
@@ -50,10 +51,6 @@ class UserUpdateView(OnlySelfMixin, UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
-
-    def handle_no_permission(self):
-        messages.error(self.request, "У вас нет прав для изменения другого пользователя.")
-        return redirect("users:list")
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -88,25 +85,18 @@ class UserUpdateView(OnlySelfMixin, UpdateView):
         return response
 
 
-class UserDeleteView(LoginRequiredMixin, OnlySelfMixin, DeleteView):
+class UserDeleteView(OnlySelfMixin, LoginRequiredMixin, DeleteView):
     model = User
     template_name = "users/confirm_delete.html"
     success_url = reverse_lazy("users:list")
     login_url = "users:login"
 
-    def handle_no_permission(self):
-        messages.error(self.request, "Вы не авторизованы! Пожалуйста, выполните вход.")
-        return super().handle_no_permission()
-
-    def dispatch(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         user = self.get_object()
         if (hasattr(user, "created_tasks") and user.created_tasks.exists()) or \
            (hasattr(user, "executed_tasks") and user.executed_tasks.exists()):
-            messages.error(request, "Нельзя удалить пользователя, связанного с задачами.")
+            messages.error(request, "Невозможно удалить пользователя, потому что он используется")
             return redirect("users:list")
-        return super().dispatch(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
         messages.success(request, "Пользователь успешно удален")
         return super().post(request, *args, **kwargs)
 
