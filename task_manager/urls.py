@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from . import views
 from .users.views import UserLoginView, UserLogoutView
+from .views import rollbar_test
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,4 +29,5 @@ urlpatterns = [
     path("labels/", include("task_manager.labels.urls")),
     path("login/", UserLoginView.as_view(), name="login"),
     path("logout/", UserLogoutView.as_view(), name="logout"),
+    path('rollbar-test/', rollbar_test),
 ]

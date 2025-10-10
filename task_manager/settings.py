@@ -34,6 +34,13 @@ ALLOWED_HOSTS = [h for h in os.getenv('ALLOWED_HOSTS', 'webserver').split(',') i
 CSRF_TRUSTED_ORIGINS = [o for o in os.getenv('CSRF_TRUSTED_ORIGINS', 'https://*.onrender.com').split(',') if o]
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+ROLLBAR = {
+    'access_token': os.getenv('ROLLBAR_ACCESS_TOKEN'),
+    'environment': os.getenv('ENVIRONMENT', 'development'),
+    'code_version': os.getenv('CODE_VERSION', '1.0'),
+    'root': str(BASE_DIR),
+}
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -53,6 +60,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'rollbar.contrib.django.middleware.RollbarNotifierMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
