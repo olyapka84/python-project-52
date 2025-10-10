@@ -50,9 +50,9 @@ Clone the repository and install dependencies with uv:
 
 Create a .env file in the project root:
 
-DEBUG=True
-SECRET_KEY=your_secret_key
-DATABASE_URL=postgresql://USER:PASSWORD@localhost:5432/task_manager
+- DEBUG=True
+- SECRET_KEY=your_secret_key
+- DATABASE_URL=postgresql://USER:PASSWORD@localhost:5432/task_manager
 
 Run database migrations:
 
