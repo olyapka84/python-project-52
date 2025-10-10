@@ -71,8 +71,7 @@ def test_update_requires_auth_redirects(client, users):
     url = f"/users/{users['alice'].pk}/update/"
     r = client.get(url)
     assert r.status_code in (302, 301)
-    # проект редиректит на список пользователей, а не на логин
-    assert r.url == "/users/"
+    assert r.url == f"/login/?next={url}"
 
 
 @pytest.mark.django_db
