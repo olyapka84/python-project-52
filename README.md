@@ -1,9 +1,9 @@
-# Hexlet Tests and SonarCloud
+## Hexlet Tests and SonarCloud
 [![Actions Status](https://github.com/olyapka84/python-project-52/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/olyapka84/python-project-52/actions)
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=olyapka84_python-project-52&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=olyapka84_python-project-52)
 
-# Task Manager
+## Task Manager
 
 Task Manager is a web application built with Django that allows users to register, log in, and manage tasks with statuses and labels.
 It’s a simple but fully functional project management tool created as the final project of the Hexlet Python Developer course.
