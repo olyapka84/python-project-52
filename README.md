@@ -1,5 +1,6 @@
-Hexlet Tests and SonarCloud
+# Hexlet Tests and SonarCloud
 [![Actions Status](https://github.com/olyapka84/python-project-52/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/olyapka84/python-project-52/actions)
+
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=olyapka84_python-project-52&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=olyapka84_python-project-52)
 
 # Task Manager
