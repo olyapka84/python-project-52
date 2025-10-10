@@ -81,6 +81,6 @@ Run the full test suite:
 
 ## About
 
-This project was developed as part of the Hexlet Python Developer program.
+The project demonstrates key Django concepts such as models, views, forms, authentication, and template inheritance.
 - Author: Olga Akukina (https://github.com/olyapka84)
 - Hexlet: https://hexlet.io
