@@ -19,7 +19,8 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = ('username', 'first_name', 'last_name', 'password1', 'password2')
+        fields = ('username', 'first_name',
+                  'last_name', 'password1', 'password2')
         labels = {
             'username': 'Имя пользователя',
             'password1': 'Пароль',
@@ -27,10 +28,12 @@ class CustomUserCreationForm(UserCreationForm):
         }
         help_texts = {
             'username': (
-                'Не более 150 символов. Допустимы буквы, цифры и символы: @/./+/-/_.'
+                'Не более 150 символов.'
+                'Допустимы буквы, цифры и символы: @/./+/-/_.'
             ),
             'password1': (
-                'Пароль должен содержать минимум 8 символов и не быть слишком простым.'
+                'Пароль должен содержать минимум 8 символов'
+                'и не быть слишком простым.'
             ),
             'password2': (
                 'Для подтверждения введите, пожалуйста, пароль ещё раз.'

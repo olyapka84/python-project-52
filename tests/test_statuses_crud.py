@@ -43,7 +43,8 @@ def test_list(auth_client):
 
 @pytest.mark.django_db
 def test_create(auth_client):
-    resp = auth_client.post("/statuses/create/", data={"name": "на тестировании"})
+    resp = auth_client.post("/statuses/create/",
+                            data={"name": "на тестировании"})
     assert resp.status_code in (302, 301)
     assert Status.objects.filter(name="на тестировании").exists()
 
@@ -51,7 +52,8 @@ def test_create(auth_client):
 @pytest.mark.django_db
 def test_update(auth_client):
     st = Status.objects.create(name="черновик")
-    resp = auth_client.post(f"/statuses/{st.pk}/update/", data={"name": "завершён"})
+    resp = auth_client.post(f"/statuses/{st.pk}/update/",
+                            data={"name": "завершён"})
     assert resp.status_code in (302, 301)
     st.refresh_from_db()
     assert st.name == "завершён"
@@ -69,7 +71,8 @@ def test_delete(auth_client):
 
 @pytest.mark.django_db
 def test_cannot_delete_status_in_use(django_user_model):
-    user = django_user_model.objects.create_user(username="alice", password="p123")
+    user = (django_user_model.objects.
+            create_user(username="alice", password="p123"))
     status = Status.objects.create(name="новый")
     Task.objects.create(
         name="Тестовая задача",

@@ -37,10 +37,12 @@ class TaskFilter(df.FilterSet):
         fields = ["status", "executor", "label", "self_tasks"]
 
     def __init__(self, data=None, queryset=None, request=None, **kwargs):
-        super().__init__(data=data, queryset=queryset, request=request, **kwargs)
+        super().__init__(data=data, queryset=queryset,
+                         request=request, **kwargs)
         self.request = request
         self.filters["executor"].field.label_from_instance = (
-            lambda u: (u.get_full_name().strip() if (u.get_full_name() or "").strip() else u.username)
+            lambda u: (u.get_full_name().strip()
+                       if (u.get_full_name() or "").strip() else u.username)
         )
 
     def filter_self_tasks(self, queryset, name, value):

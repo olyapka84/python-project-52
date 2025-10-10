@@ -1,6 +1,9 @@
-line-length = 88
+line-length = 80
 exclude = [
     "migrations",
     "task_manager/settings.py",
     ".venv",
 ]
+
+[lint]
+select = ["E", "F"]

@@ -22,13 +22,16 @@ class UserListView(ListView):
 class OnlySelfMixin(UserPassesTestMixin):
     def test_func(self):
         obj = self.get_object()
-        return self.request.user.is_authenticated and obj.pk == self.request.user.pk
+        return (self.request.user.is_authenticated and 
+                obj.pk == self.request.user.pk)
 
     def handle_no_permission(self):
         if not self.request.user.is_authenticated:
-            messages.error(self.request, "Вы не авторизованы! Пожалуйста, выполните вход.")
+            messages.error(self.request, 
+                           "Вы не авторизованы! Пожалуйста, выполните вход.")
             return super().handle_no_permission()
-        messages.error(self.request, "У вас нет прав для изменения другого пользователя.")
+        messages.error(self.request, 
+                       "У вас нет прав для изменения другого пользователя.")
         return redirect("users:list")
 
 
@@ -73,7 +76,8 @@ class UserUpdateView(OnlySelfMixin, UpdateView):
         p2 = form.cleaned_data.get("password2")
         if p1 or p2:
             if not p1 or not p2:
-                form.add_error("password2", "Пожалуйста, введите пароль дважды.")
+                form.add_error("password2", 
+                               "Пожалуйста, введите пароль дважды.")
                 return self.form_invalid(form)
             if p1 != p2:
                 form.add_error("password2", "Введённые пароли не совпадают.")
@@ -95,7 +99,9 @@ class UserDeleteView(OnlySelfMixin, LoginRequiredMixin, DeleteView):
         user = self.get_object()
         if (hasattr(user, "created_tasks") and user.created_tasks.exists()) or \
            (hasattr(user, "executed_tasks") and user.executed_tasks.exists()):
-            messages.error(request, "Невозможно удалить пользователя, потому что он используется")
+            messages.error(request, 
+                           "Невозможно удалить пользователя, "
+                           "потому что он используется")
             return redirect("users:list")
         messages.success(request, "Пользователь успешно удален")
         return super().post(request, *args, **kwargs)
