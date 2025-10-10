@@ -15,6 +15,6 @@
 <button type="submit" class="btn btn-primary">
   {% if object %}Изменить{% else %}Создать{% endif %}
 </button>
-  <a href="{% url 'statuses_index' %}" class="btn btn-link">Отмена</a>
+  <a href="{% url 'statuses:index' %}" class="btn btn-link">Отмена</a>
 </form>
 {% endblock %}

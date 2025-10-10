@@ -39,8 +39,8 @@
 {% endif %}
 
 <p class="mt-3">
-  <a class="btn btn-outline-secondary" href="{% url 'tasks_update' task.pk %}">Изменить</a>
-  <a class="btn btn-outline-danger" href="{% url 'tasks_delete' task.pk %}">Удалить</a>
-  <a class="btn btn-link" href="{% url 'tasks_index' %}">К списку</a>
+  <a class="btn btn-outline-secondary" href="{% url 'tasks:update' task.pk %}">Изменить</a>
+  <a class="btn btn-outline-danger" href="{% url 'tasks:delete' task.pk %}">Удалить</a>
+  <a class="btn btn-link" href="{% url 'tasks:index' %}">К списку</a>
 </p>
 {% endblock %}

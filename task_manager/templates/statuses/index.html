@@ -2,7 +2,7 @@
 {% block content %}
 <h1>Статусы</h1>
 
-<p><a class="btn btn-primary" href="{% url 'statuses_create' %}">Создать статус</a></p>
+<p><a class="btn btn-primary" href="{% url 'statuses:create' %}">Создать статус</a></p>
 
 <table class="table table-striped align-middle">
   <thead>
@@ -18,8 +18,8 @@
       <td>{{ st.id }}</td>
       <td>{{ st.name }}</td>
       <td class="text-end">
-        <a class="btn btn-sm btn-outline-secondary" href="{% url 'statuses_update' st.pk %}">Изменить</a>
-        <a class="btn btn-sm btn-outline-danger" href="{% url 'statuses_delete' st.pk %}">Удалить</a>
+        <a class="btn btn-sm btn-outline-secondary" href="{% url 'statuses:update' st.pk %}">Изменить</a>
+        <a class="btn btn-sm btn-outline-danger" href="{% url 'statuses:delete' st.pk %}">Удалить</a>
       </td>
     </tr>
   {% empty %}

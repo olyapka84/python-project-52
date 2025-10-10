@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
+from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 from django_filters.views import FilterView
 
 from .filters import TaskFilter
@@ -37,7 +37,7 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
     model = Task
     form_class = TaskForm
     template_name = "tasks/form.html"
-    success_url = reverse_lazy("tasks_index")
+    success_url = reverse_lazy("tasks:index")
     login_url = "users:login"
 
     def form_valid(self, form):
@@ -50,7 +50,7 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
     model = Task
     form_class = TaskForm
     template_name = "tasks/form.html"
-    success_url = reverse_lazy("tasks_index")
+    success_url = reverse_lazy("tasks:index")
     login_url = "users:login"
 
     def form_valid(self, form):
@@ -61,7 +61,7 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
 class TaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Task
     template_name = "tasks/confirm_delete.html"
-    success_url = reverse_lazy("tasks_index")
+    success_url = reverse_lazy("tasks:index")
     login_url = "users:login"
 
     def test_func(self):
@@ -70,7 +70,7 @@ class TaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def handle_no_permission(self):
         if self.request.user.is_authenticated:
             messages.error(self.request, "Задачу может удалить только ее автор")
-            return redirect("tasks_index")
+            return redirect("tasks:index")
         return super().handle_no_permission()
 
     def post(self, request, *args, **kwargs):

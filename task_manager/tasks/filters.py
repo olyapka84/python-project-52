@@ -1,10 +1,12 @@
-# tasks/filters.py
 import django_filters as df
 from django import forms
 from django.contrib.auth import get_user_model
-from .models import Task
-from task_manager.statuses.models import Status
+
 from task_manager.labels.models import Label
+from task_manager.statuses.models import Status
+from task_manager.users.utils import format_user_display
+
+from .models import Task
 
 User = get_user_model()
 
@@ -40,10 +42,7 @@ class TaskFilter(df.FilterSet):
         super().__init__(data=data, queryset=queryset,
                          request=request, **kwargs)
         self.request = request
-        self.filters["executor"].field.label_from_instance = (
-            lambda u: (u.get_full_name().strip()
-                       if (u.get_full_name() or "").strip() else u.username)
-        )
+        self.filters["executor"].field.label_from_instance = format_user_display
 
     def filter_self_tasks(self, queryset, name, value):
         return queryset.filter(author=self.request.user) if value else queryset

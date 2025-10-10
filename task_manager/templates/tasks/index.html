@@ -2,7 +2,7 @@
 {% block content %}
 <h1>Задачи</h1>
 
-<p><a class="btn btn-primary" href="{% url 'tasks_create' %}">Создать задачу</a></p>
+<p><a class="btn btn-primary" href="{% url 'tasks:create' %}">Создать задачу</a></p>
 
 {# Форма фильтров #}
 <form method="get" class="row g-2 align-items-end mb-3">
@@ -51,7 +51,7 @@
   {% for t in tasks %}
     <tr>
       <td>{{ t.id }}</td>
-      <td><a href="{% url 'tasks_detail' t.pk %}">{{ t.name }}</a></td>
+      <td><a href="{% url 'tasks:detail' t.pk %}">{{ t.name }}</a></td>
       <td>{{ t.status }}</td>
       <td>{{ t.author.get_full_name|default:t.author.username }}</td>
       <td>
@@ -62,8 +62,8 @@
       {% endif %}
     </td>
       <td class="text-end">
-        <a class="btn btn-sm btn-outline-secondary" href="{% url 'tasks_update' t.pk %}">Изменить</a>
-        <a class="btn btn-sm btn-outline-danger" href="{% url 'tasks_delete' t.pk %}">Удалить</a>
+        <a class="btn btn-sm btn-outline-secondary" href="{% url 'tasks:update' t.pk %}">Изменить</a>
+        <a class="btn btn-sm btn-outline-danger" href="{% url 'tasks:delete' t.pk %}">Удалить</a>
       </td>
     </tr>
   {% empty %}

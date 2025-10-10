@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from .models import Status
 from .forms import StatusForm
@@ -19,7 +19,7 @@ class StatusCreateView(LoginRequiredMixin, CreateView):
     model = Status
     form_class = StatusForm
     template_name = "statuses/form.html"
-    success_url = reverse_lazy("statuses_index")
+    success_url = reverse_lazy("statuses:index")
     login_url = "users:login"
 
     def form_valid(self, form):
@@ -31,7 +31,7 @@ class StatusUpdateView(LoginRequiredMixin, UpdateView):
     model = Status
     form_class = StatusForm
     template_name = "statuses/form.html"
-    success_url = reverse_lazy("statuses_index")
+    success_url = reverse_lazy("statuses:index")
     login_url = "users:login"
 
     def form_valid(self, form):
@@ -42,16 +42,17 @@ class StatusUpdateView(LoginRequiredMixin, UpdateView):
 class StatusDeleteView(LoginRequiredMixin, DeleteView):
     model = Status
     template_name = "statuses/confirm_delete.html"
-    success_url = reverse_lazy("statuses_index")
+    success_url = reverse_lazy("statuses:index")
     login_url = "users:login"
 
     def post(self, request, *args, **kwargs):
         status = self.get_object()
         if status.tasks.exists():
-            messages.error(request, 
-                           "Невозможно удалить статус, "
-                           "потому что он используется")
-            return redirect("statuses_index")
+            messages.error(
+                request,
+                "Невозможно удалить статус, потому что он используется",
+            )
+            return redirect("statuses:index")
         response = super().post(request, *args, **kwargs)
         messages.success(request, "Статус успешно удален")
         return response
