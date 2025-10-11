@@ -39,3 +39,6 @@ build/
 *.sh~
 *.swp
 /.env
+
+/static/
+/staticfiles/
