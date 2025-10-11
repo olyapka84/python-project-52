@@ -1,12 +1,11 @@
-# tests/test_statuses_simple.py
-import pytest
-from django.contrib.auth import get_user_model
-User = get_user_model()
 from django.db.models import ProtectedError
 from django.test import Client
 
 from task_manager.statuses.models import Status
 from task_manager.tasks.models import Task
+import pytest
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 @pytest.fixture

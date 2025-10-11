@@ -1,9 +1,8 @@
-# tests/test_tasks_crud.py
+from task_manager.statuses.models import Status
+from task_manager.tasks.models import Task
 import pytest
 from django.contrib.auth import get_user_model
 User = get_user_model()
-from task_manager.statuses.models import Status
-from task_manager.tasks.models import Task
 
 
 @pytest.fixture

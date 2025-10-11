@@ -1,16 +1,15 @@
+from django.contrib.auth.views import LoginView
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.views import View
+from django.views.generic import ListView, UpdateView, DeleteView, CreateView
+from .forms import CustomUserCreationForm, CustomAuthenticationForm
 from django import forms
 from django.contrib import messages
 from django.contrib.auth import logout, password_validation
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth import get_user_model
 User = get_user_model()
-from django.contrib.auth.views import LoginView
-from django.shortcuts import redirect
-from django.urls import reverse_lazy
-from django.views import View
-from django.views.generic import ListView, UpdateView, DeleteView, CreateView
-
-from .forms import CustomUserCreationForm, CustomAuthenticationForm
 
 
 class UserListView(ListView):
