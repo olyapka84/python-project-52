@@ -35,6 +35,9 @@ jobs:
           DEBUG: "False"
           DATABASE_URL: sqlite:///./test.sqlite3
           ALLOWED_HOSTS: testserver,localhost,127.0.0.1
+          SECURE_SSL_REDIRECT: "False"
+          SESSION_COOKIE_SECURE: "False"
+          CSRF_COOKIE_SECURE: "False"
         run: |
           mkdir -p reports
           uv run pytest --ds=task_manager.settings \
