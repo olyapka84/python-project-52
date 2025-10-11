@@ -124,6 +124,4 @@ class UserLogoutView(View):
         return redirect("home")
 
     def get(self, request, *args, **kwargs):
-        logout(request)
-        messages.success(request, "Вы разлогинены")
         return redirect("home")
