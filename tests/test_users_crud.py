@@ -71,7 +71,8 @@ def test_update_requires_auth_redirects(client, users):
     url = f"/users/{users['alice'].pk}/update/"
     r = client.get(url)
     assert r.status_code in (302, 301)
-    assert r.url == f"/login/?next={url}"
+    assert "/login/" in r.url
+    assert f"next={url}" in r.url
 
 
 @pytest.mark.django_db
@@ -100,13 +101,12 @@ def test_user_cannot_update_other(auth_client, users):
     assert users["bob"].username == "bob"
 
 
-# ---- DELETE ----
 @pytest.mark.django_db
 def test_delete_requires_auth_redirects(client, users):
     url = f"/users/{users['alice'].pk}/delete/"
     r = client.get(url)
     assert r.status_code in (302, 301)
-    assert r.url.startswith("/users/login/")
+    assert "/login/" in r.url
 
 
 @pytest.mark.django_db

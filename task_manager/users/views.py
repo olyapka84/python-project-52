@@ -93,7 +93,7 @@ class UserDeleteView(OnlySelfMixin, LoginRequiredMixin, DeleteView):
     model = User
     template_name = "users/confirm_delete.html"
     success_url = reverse_lazy("users:list")
-    login_url = "users:login"
+    login_url = "login"
 
     def post(self, request, *args, **kwargs):
         user = self.get_object()

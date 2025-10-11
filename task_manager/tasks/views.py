@@ -14,7 +14,7 @@ class TaskListView(LoginRequiredMixin, FilterView):
     model = Task
     template_name = "tasks/index.html"
     context_object_name = "tasks"
-    login_url = "users:login"
+    login_url = "login"
     filterset_class = TaskFilter
 
     def get_queryset(self):
@@ -30,7 +30,7 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
     model = Task
     template_name = "tasks/detail.html"
     context_object_name = "task"
-    login_url = "users:login"
+    login_url = "login"
 
 
 class TaskCreateView(LoginRequiredMixin, CreateView):
@@ -38,7 +38,7 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
     form_class = TaskForm
     template_name = "tasks/form.html"
     success_url = reverse_lazy("tasks:index")
-    login_url = "users:login"
+    login_url = "login"
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -51,7 +51,7 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
     form_class = TaskForm
     template_name = "tasks/form.html"
     success_url = reverse_lazy("tasks:index")
-    login_url = "users:login"
+    login_url = "login"
 
     def form_valid(self, form):
         messages.success(self.request, "Задача успешно изменена")
@@ -62,7 +62,7 @@ class TaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Task
     template_name = "tasks/confirm_delete.html"
     success_url = reverse_lazy("tasks:index")
-    login_url = "users:login"
+    login_url = "login"
 
     def test_func(self):
         return self.get_object().author_id == self.request.user.id

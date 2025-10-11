@@ -12,7 +12,7 @@ class LabelListView(LoginRequiredMixin, ListView):
     model = Label
     template_name = "labels/index.html"
     context_object_name = "labels"
-    login_url = "users:login"
+    login_url = "login"
 
 
 class LabelCreateView(LoginRequiredMixin, CreateView):
@@ -20,7 +20,7 @@ class LabelCreateView(LoginRequiredMixin, CreateView):
     form_class = LabelForm
     template_name = "labels/form.html"
     success_url = reverse_lazy("labels:index")
-    login_url = "users:login"
+    login_url = "login"
 
     def form_valid(self, form):
         messages.success(self.request, "Метка успешно создана")
@@ -32,7 +32,7 @@ class LabelUpdateView(LoginRequiredMixin, UpdateView):
     form_class = LabelForm
     template_name = "labels/form.html"
     success_url = reverse_lazy("labels:index")
-    login_url = "users:login"
+    login_url = "login"
 
     def form_valid(self, form):
         messages.success(self.request, "Метка успешно изменена")
@@ -43,7 +43,7 @@ class LabelDeleteView(LoginRequiredMixin, DeleteView):
     model = Label
     template_name = "labels/confirm_delete.html"
     success_url = reverse_lazy("labels:index")
-    login_url = "users:login"
+    login_url = "login"
 
     def post(self, request, *args, **kwargs):
         label = self.get_object()
