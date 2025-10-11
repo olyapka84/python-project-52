@@ -1,0 +1,10 @@
+[run]
+branch = True
+source = task_manager
+relative_files = True
+
+[paths]
+source =
+    task_manager
+    /home/runner/work/python-project-52/python-project-52/task_manager
+    /github/workspace/task_manager

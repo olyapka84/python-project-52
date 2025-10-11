@@ -22,13 +22,13 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install uv and sync
+      - name: Install uv and deps
         run: |
           pip install uv
           uv sync --frozen
-          uv pip install pytest pytest-cov pytest-django
+          uv pip install pytest pytest-django coverage
 
-      - name: Run tests with coverage
+      - name: Run tests and build coverage.xml (relative paths)
         env:
           DJANGO_SETTINGS_MODULE: task_manager.settings
           SECRET_KEY: test-secret-key
@@ -40,11 +40,9 @@ jobs:
           CSRF_COOKIE_SECURE: "False"
         run: |
           mkdir -p reports
-          uv run pytest --ds=task_manager.settings \
-                        --cov=task_manager \
-                        --cov-report=xml \
-                        --junitxml=reports/junit.xml
-          sed -i 's|<source>/home/runner/work/python-project-52/python-project-52</source>|<source>.</source>|g' coverage.xml
+          uv run coverage erase
+          uv run coverage run -m pytest --ds=task_manager.settings --junitxml=reports/junit.xml
+          uv run coverage xml -i -o coverage.xml  # учитывает .coveragerc (relative_files + paths)
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
