@@ -44,10 +44,7 @@ jobs:
                         --cov=task_manager \
                         --cov-report=xml \
                         --junitxml=reports/junit.xml
-
-      - name: Fix coverage paths
-        run: |
-          sed -i 's@'$GITHUB_WORKSPACE'@/github/workspace@g' coverage.xml
+          sed -i 's|<source>/home/runner/work/python-project-52/python-project-52</source>|<source>.</source>|g' coverage.xml
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
