@@ -29,7 +29,7 @@ def status_new(db):
 @pytest.mark.django_db
 def test_login_required(client):
     r = client.get("/tasks/")
-    assert r.status_code in (302, 301)  # редирект на users:login
+    assert r.status_code in (302, 301)
 
 
 @pytest.mark.django_db
@@ -51,7 +51,7 @@ def test_create(auth_client, users, status_new):
         "name": "Новая задача",
         "description": "Что-то сделать",
         "status": status_new.pk,
-        "executor": users["u2"].pk,  # можно и не указывать
+        "executor": users["u2"].pk,
     })
     assert resp.status_code in (302, 301)
     assert Task.objects.filter(name="Новая задача",

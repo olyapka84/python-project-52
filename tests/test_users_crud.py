@@ -30,7 +30,6 @@ def auth_client(users):
     return c
 
 
-# ---- LIST ----
 @pytest.mark.django_db
 def test_users_list_is_public(client, users):
     resp = client.get("/users/")
@@ -40,7 +39,6 @@ def test_users_list_is_public(client, users):
     assert "bob" in html
 
 
-# ---- CREATE (registration) ----
 @pytest.mark.django_db
 def test_registration_get(client):
     r = client.get("/users/create/")
@@ -65,7 +63,6 @@ def test_registration_post_creates_user(client):
     assert User.objects.filter(username="charlie").exists()
 
 
-# ---- UPDATE ----
 @pytest.mark.django_db
 def test_update_requires_auth_redirects(client, users):
     url = f"/users/{users['alice'].pk}/update/"
