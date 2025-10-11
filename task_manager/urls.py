@@ -23,7 +23,7 @@ from .views import rollbar_test
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", views.index, name="home"),
-    path("users/", include("task_manager.users.urls", namespace="users")),
+    path("users/", include("task_manager.users.urls")),
     path("statuses/", include("task_manager.statuses.urls")),
     path("tasks/", include("task_manager.tasks.urls")),
     path("labels/", include("task_manager.labels.urls")),
