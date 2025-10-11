@@ -4,6 +4,7 @@ from django.urls import reverse
 from task_manager.labels.models import Label
 from task_manager.tasks.models import Task, Status
 
+
 @pytest.mark.django_db
 def test_labels_list_requires_login(client):
     url = reverse("labels:index")
