@@ -4,7 +4,6 @@
 
 <p><a class="btn btn-primary" href="{% url 'tasks:create' %}">Создать задачу</a></p>
 
-{# Форма фильтров #}
 <form method="get" class="row g-2 align-items-end mb-3">
   <div class="col-sm-3">
     <label for="id_status" class="form-label">Статус</label>
@@ -35,7 +34,6 @@
   </div>
 </form>
 
-
 <table class="table table-striped align-middle">
   <thead>
     <tr>
@@ -44,6 +42,7 @@
       <th>Статус</th>
       <th>Автор</th>
       <th>Исполнитель</th>
+      <th>Дата создания</th>
       <th></th>
     </tr>
   </thead>
@@ -60,14 +59,15 @@
       {% else %}
       —
       {% endif %}
-    </td>
+      </td>
+      <td>{{ t.created_at|date:"d.m.Y H:i" }}</td>
       <td class="text-end">
         <a class="btn btn-sm btn-outline-secondary" href="{% url 'tasks:update' t.pk %}">Изменить</a>
         <a class="btn btn-sm btn-outline-danger" href="{% url 'tasks:delete' t.pk %}">Удалить</a>
       </td>
     </tr>
   {% empty %}
-    <tr><td colspan="6">Пока нет задач.</td></tr>
+    <tr><td colspan="7">Пока нет задач.</td></tr>
   {% endfor %}
   </tbody>
 </table>

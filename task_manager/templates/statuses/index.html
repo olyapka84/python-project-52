@@ -9,6 +9,7 @@
     <tr>
       <th>ID</th>
       <th>Название</th>
+      <th>Дата создания</th>
       <th></th>
     </tr>
   </thead>
@@ -17,13 +18,14 @@
     <tr>
       <td>{{ st.id }}</td>
       <td>{{ st.name }}</td>
+      <td>{{ st.created_at|date:"d.m.Y H:i" }}</td>
       <td class="text-end">
         <a class="btn btn-sm btn-outline-secondary" href="{% url 'statuses:update' st.pk %}">Изменить</a>
         <a class="btn btn-sm btn-outline-danger" href="{% url 'statuses:delete' st.pk %}">Удалить</a>
       </td>
     </tr>
   {% empty %}
-    <tr><td colspan="3">Пока нет статусов.</td></tr>
+    <tr><td colspan="4">Пока нет статусов.</td></tr>
   {% endfor %}
   </tbody>
 </table>
