@@ -6,7 +6,6 @@ from task_manager.tasks.models import Task, Status
 pytestmark = pytest.mark.django_db
 
 
-
 @pytest.mark.django_db
 def test_labels_list_requires_login(client):
     url = reverse("labels:index")
