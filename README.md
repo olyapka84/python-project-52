@@ -3,6 +3,8 @@
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=olyapka84_python-project-52&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=olyapka84_python-project-52)
 
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=olyapka84_python-project-52&metric=coverage)](https://sonarcloud.io/summary/new_code?id=olyapka84_python-project-52)
+
 ## Task Manager
 
 Task Manager is a web application built with Django that allows users to register, log in, and manage tasks with statuses and labels.
