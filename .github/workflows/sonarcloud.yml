@@ -55,7 +55,7 @@ jobs:
             -Dsonar.organization=olyapka84
             -Dsonar.python.version=3.11
             -Dsonar.sources=task_manager
-            -Dsonar.tests=tests
+            -Dsonar.tests=tests,task_manager
             -Dsonar.exclusions=**/migrations/**,**/__pycache__/**,**/.venv/**,**/venv/**,manage.py
             -Dsonar.python.coverage.reportPaths=coverage.xml
             -Dsonar.python.xunit.reportPath=reports/junit.xml
