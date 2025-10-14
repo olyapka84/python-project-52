@@ -22,13 +22,13 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install uv and deps
+      - name: Install uv and dependencies
         run: |
           pip install uv
           uv sync --frozen
           uv pip install pytest pytest-django coverage
 
-      - name: Run tests and build coverage.xml (relative paths)
+      - name: Run tests and build coverage.xml
         env:
           DJANGO_SETTINGS_MODULE: task_manager.settings
           SECRET_KEY: test-secret-key
@@ -42,10 +42,20 @@ jobs:
           mkdir -p reports
           uv run coverage erase
           uv run coverage run -m pytest --ds=task_manager.settings --junitxml=reports/junit.xml
-          uv run coverage xml -i -o coverage.xml  # учитывает .coveragerc (relative_files + paths)
+          uv run coverage xml -i -o coverage.xml
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=olyapka84_python-project-52
+            -Dsonar.organization=olyapka84
+            -Dsonar.python.version=3.11
+            -Dsonar.sources=task_manager
+            -Dsonar.tests=tests
+            -Dsonar.exclusions=**/migrations/**,**/__pycache__/**,**/.venv/**,**/venv/**,manage.py
+            -Dsonar.python.coverage.reportPaths=coverage.xml
+            -Dsonar.python.xunit.reportPath=reports/junit.xml
