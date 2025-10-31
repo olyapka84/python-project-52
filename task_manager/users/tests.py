@@ -92,6 +92,68 @@ def test_user_can_update_self(auth_client, users):
 
 
 @pytest.mark.django_db
+def test_user_can_update_password(auth_client, users):
+    url = reverse("users:update", args=[users["alice"].pk])
+    new_password = "Secur3Pass!234"
+    response = auth_client.post(
+        url,
+        data={
+            "username": "alice",
+            "first_name": "Alice",
+            "last_name": "A",
+            "password1": new_password,
+            "password2": new_password,
+        },
+    )
+
+    assert response.status_code in (302, 301)
+
+    users["alice"].refresh_from_db()
+    assert users["alice"].check_password(new_password)
+
+    fresh_client = Client()
+    assert fresh_client.login(username="alice", password=new_password)
+
+
+@pytest.mark.django_db
+def test_user_update_requires_both_password_fields(auth_client, users):
+    url = reverse("users:update", args=[users["alice"].pk])
+    response = auth_client.post(
+        url,
+        data={
+            "username": "alice",
+            "first_name": "Alice",
+            "last_name": "A",
+            "password1": "OnlyOnce123!",
+            "password2": "",
+        },
+    )
+
+    assert response.status_code == 200
+    html = response.content.decode()
+    assert "Please enter the password twice." in html
+
+
+@pytest.mark.django_db
+def test_user_update_password_mismatch(auth_client, users):
+    url = reverse("users:update", args=[users["alice"].pk])
+    response = auth_client.post(
+        url,
+        data={
+            "username": "alice",
+            "first_name": "Alice",
+            "last_name": "A",
+            "password1": "Mismatch123!",
+            "password2": "Mismatch321!",
+        },
+    )
+
+    assert response.status_code == 200
+    html = response.content.decode()
+    assert "The entered passwords do not match." in html
+
+
+@pytest.mark.django_db
 def test_user_cannot_update_other(auth_client, users):
     url = reverse("users:update", args=[users["bob"].pk])
     r = auth_client.post(url, data={"username": "bob_hacked"})
