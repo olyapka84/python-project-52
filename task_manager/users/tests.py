@@ -52,6 +52,38 @@ def test_registration_get(client):
 
 
 @pytest.mark.django_db
+def test_registration_form_english_texts(client):
+    response = client.get(reverse("users:create"))
+    assert response.status_code == 200
+
+    html = response.content.decode()
+    assert "First name" in html
+    assert "Last name" in html
+    assert "Password confirmation" in html
+
+
+@pytest.mark.django_db
+def test_login_page_uses_custom_authentication_form(client):
+    response = client.get(reverse("login"))
+    assert response.status_code == 200
+
+    html = response.content.decode()
+    assert "Log in" in html
+    assert "Username" in html
+    assert "Password" in html
+
+
+@pytest.mark.django_db
+def test_logout_view_logs_user_out(auth_client):
+    response = auth_client.post(reverse("logout"))
+    assert response.status_code in (302, 301)
+
+    # The logout view should end the session, so following requests must be anonymous
+    follow_up = auth_client.get(reverse("home"))
+    assert follow_up.wsgi_request.user.is_anonymous
+
+
+@pytest.mark.django_db
 def test_registration_post_creates_user(client):
     data = {
         "username": "charlie",
@@ -79,6 +111,10 @@ def test_user_can_update_self(auth_client, users):
     url = reverse("users:update", args=[users["alice"].pk])
     r_get = auth_client.get(url)
     assert r_get.status_code == 200
+    html = r_get.content.decode()
+    assert "Password" in html
+    assert "Password confirmation" in html
+    assert "Please enter the password again for confirmation." in html
 
     r_post = auth_client.post(
         url,
@@ -89,6 +125,68 @@ def test_user_can_update_self(auth_client, users):
     users["alice"].refresh_from_db()
     assert users["alice"].username == "alice_new"
     assert users["alice"].first_name == "Al"
+
+
+@pytest.mark.django_db
+def test_user_can_update_password(auth_client, users):
+    url = reverse("users:update", args=[users["alice"].pk])
+    new_password = "Secur3Pass!234"
+    response = auth_client.post(
+        url,
+        data={
+            "username": "alice",
+            "first_name": "Alice",
+            "last_name": "A",
+            "password1": new_password,
+            "password2": new_password,
+        },
+    )
+
+    assert response.status_code in (302, 301)
+
+    users["alice"].refresh_from_db()
+    assert users["alice"].check_password(new_password)
+
+    fresh_client = Client()
+    assert fresh_client.login(username="alice", password=new_password)
+
+
+@pytest.mark.django_db
+def test_user_update_requires_both_password_fields(auth_client, users):
+    url = reverse("users:update", args=[users["alice"].pk])
+    response = auth_client.post(
+        url,
+        data={
+            "username": "alice",
+            "first_name": "Alice",
+            "last_name": "A",
+            "password1": "OnlyOnce123!",
+            "password2": "",
+        },
+    )
+
+    assert response.status_code == 200
+    html = response.content.decode()
+    assert "Please enter the password twice." in html
+
+
+@pytest.mark.django_db
+def test_user_update_password_mismatch(auth_client, users):
+    url = reverse("users:update", args=[users["alice"].pk])
+    response = auth_client.post(
+        url,
+        data={
+            "username": "alice",
+            "first_name": "Alice",
+            "last_name": "A",
+            "password1": "Mismatch123!",
+            "password2": "Mismatch321!",
+        },
+    )
+
+    assert response.status_code == 200
+    html = response.content.decode()
+    assert "The entered passwords do not match." in html
 
 
 @pytest.mark.django_db
