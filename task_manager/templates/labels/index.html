@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Метки</h1>
+<h1>Labels</h1>
 
-<p><a class="btn btn-primary" href="{% url 'labels:create' %}">Создать метку</a></p>
+<p><a class="btn btn-primary" href="{% url 'labels:create' %}">Create label</a></p>
 
 <table class="table table-striped align-middle">
   <thead>
     <tr>
       <th>ID</th>
-      <th>Имя</th>
-      <th>Дата создания</th>
+      <th>Name</th>
+      <th>Created at</th>
       <th></th>
     </tr>
   </thead>
@@ -20,12 +20,12 @@
       <td>{{ label.name }}</td>
       <td>{{ label.created_at|date:"d.m.Y H:i" }}</td>
       <td class="text-end">
-        <a class="btn btn-sm btn-outline-secondary" href="{% url 'labels:update' label.pk %}">Изменить</a>
-        <a class="btn btn-sm btn-outline-danger" href="{% url 'labels:delete' label.pk %}">Удалить</a>
+        <a class="btn btn-sm btn-outline-secondary" href="{% url 'labels:update' label.pk %}">Update</a>
+        <a class="btn btn-sm btn-outline-danger" href="{% url 'labels:delete' label.pk %}">Delete</a>
       </td>
     </tr>
   {% empty %}
-    <tr><td colspan="4">Пока нет меток.</td></tr>
+    <tr><td colspan="4">No labels yet.</td></tr>
   {% endfor %}
   </tbody>
 </table>

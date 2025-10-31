@@ -2,9 +2,9 @@
 {% block content %}
 <h1>{{ task.name }}</h1>
 
-<p><strong>Статус:</strong> {{ task.status }}</p>
+<p><strong>Status:</strong> {{ task.status }}</p>
 
-<p><strong>Автор:</strong>
+<p><strong>Author:</strong>
   {% if task.author.get_full_name %}
     {{ task.author.get_full_name }}
   {% else %}
@@ -12,7 +12,7 @@
   {% endif %}
 </p>
 
-<p><strong>Исполнитель:</strong>
+<p><strong>Executor:</strong>
   {% if task.executor %}
     {% if task.executor.get_full_name %}
       {{ task.executor.get_full_name }}
@@ -27,11 +27,11 @@
 <hr>
 
 <p style="white-space: pre-wrap">
-  {{ task.description|default:"(без описания)" }}
+  {{ task.description|default:"(no description)" }}
 </p>
 
 {% if task.labels.exists %}
-  <p><strong>Метки:</strong>
+  <p><strong>Labels:</strong>
     {% for label in task.labels.all %}
       <span class="badge bg-secondary">{{ label.name }}</span>
     {% endfor %}
@@ -39,8 +39,8 @@
 {% endif %}
 
 <p class="mt-3">
-  <a class="btn btn-outline-secondary" href="{% url 'tasks:update' task.pk %}">Изменить</a>
-  <a class="btn btn-outline-danger" href="{% url 'tasks:delete' task.pk %}">Удалить</a>
-  <a class="btn btn-link" href="{% url 'tasks:index' %}">К списку</a>
+  <a class="btn btn-outline-secondary" href="{% url 'tasks:update' task.pk %}">Update</a>
+  <a class="btn btn-outline-danger" href="{% url 'tasks:delete' task.pk %}">Delete</a>
+  <a class="btn btn-link" href="{% url 'tasks:index' %}">Back to list</a>
 </p>
 {% endblock %}

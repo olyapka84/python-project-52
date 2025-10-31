@@ -23,7 +23,7 @@ class LabelCreateView(LoginRequiredMixin, CreateView):
     login_url = "login"
 
     def form_valid(self, form):
-        messages.success(self.request, "Метка успешно создана")
+        messages.success(self.request, "Label created successfully")
         return super().form_valid(form)
 
 
@@ -35,7 +35,7 @@ class LabelUpdateView(LoginRequiredMixin, UpdateView):
     login_url = "login"
 
     def form_valid(self, form):
-        messages.success(self.request, "Метка успешно изменена")
+        messages.success(self.request, "Label updated successfully")
         return super().form_valid(form)
 
 
@@ -48,11 +48,10 @@ class LabelDeleteView(LoginRequiredMixin, DeleteView):
     def post(self, request, *args, **kwargs):
         label = self.get_object()
         if label.labeled_tasks.exists():
-            messages.error(request, 
-                           "Невозможно удалить метку, "
-                           "потому что она используется")
+            messages.error(request,
+                           "Cannot delete label because it is in use")
             return redirect("labels:index")
 
         response = super().post(request, *args, **kwargs)
-        messages.success(request, "Метка успешно удалена")
+        messages.success(request, "Label deleted successfully")
         return response

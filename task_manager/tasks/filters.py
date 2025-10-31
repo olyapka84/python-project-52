@@ -14,23 +14,23 @@ User = get_user_model()
 class TaskFilter(df.FilterSet):
     status = df.ModelChoiceFilter(
         queryset=Status.objects.all().order_by("id"),
-        label="Статус",
+        label="Status",
         widget=forms.Select(attrs={"class": "form-select"}),
     )
     executor = df.ModelChoiceFilter(
         queryset=User.objects.all().order_by("id"),
-        label="Исполнитель",
+        label="Executor",
         widget=forms.Select(attrs={"class": "form-select"}),
     )
     label = df.ModelChoiceFilter(
         field_name="labels",
         queryset=Label.objects.all().order_by("id"),
-        label="Метка",
+        label="Label",
         widget=forms.Select(attrs={"class": "form-select"}),
     )
     self_tasks = df.BooleanFilter(
         method="filter_self_tasks",
-        label="Только свои задачи",
+        label="Only my tasks",
         widget=forms.CheckboxInput(attrs={"class": "form-check-input"}),
     )
 

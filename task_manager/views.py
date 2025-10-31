@@ -10,4 +10,4 @@ def index(request):
 def rollbar_test(request):
     if not settings.DEBUG:
         raise Http404("Not found")
-    raise RuntimeError("Rollbar test: искусственная ошибка для проверки")
+    raise RuntimeError("Rollbar test: artificial error for verification")

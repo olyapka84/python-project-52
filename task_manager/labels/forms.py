@@ -10,5 +10,5 @@ class LabelForm(forms.ModelForm):
             "name": forms.TextInput(attrs={"class": "form-control"}),
         }
         labels = {
-            "name": "Имя",
+            "name": "Name",
         }

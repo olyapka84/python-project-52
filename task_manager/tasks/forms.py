@@ -22,11 +22,11 @@ class TaskForm(forms.ModelForm):
                                                   "size": 5}),
         }
         labels = {
-            "name": "Имя",
-            "description": "Описание",
-            "status": "Статус",
-            "executor": "Исполнитель",
-            "labels": "Метки",
+            "name": "Name",
+            "description": "Description",
+            "status": "Status",
+            "executor": "Executor",
+            "labels": "Labels",
         }
 
     def __init__(self, *args, **kwargs):

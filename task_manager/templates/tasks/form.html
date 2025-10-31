@@ -1,44 +1,44 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>{{ object|default_if_none:"Создать задачу" }}</h1>
+<h1>{{ object|default_if_none:"Create task" }}</h1>
 
 <form method="post">
   {% csrf_token %}
   {{ form.non_field_errors }}
 
   <div class="mb-3">
-    <label for="{{ form.name.id_for_label }}" class="form-label">Имя</label>
+    <label for="{{ form.name.id_for_label }}" class="form-label">Name</label>
     {{ form.name }}
     {% if form.name.errors %}<div class="text-danger">{{ form.name.errors|striptags }}</div>{% endif %}
   </div>
 
   <div class="mb-3">
-    <label for="{{ form.description.id_for_label }}" class="form-label">Описание</label>
+    <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
     {{ form.description }}
     {% if form.description.errors %}<div class="text-danger">{{ form.description.errors|striptags }}</div>{% endif %}
   </div>
 
   <div class="mb-3">
-    <label for="{{ form.status.id_for_label }}" class="form-label">Статус</label>
+    <label for="{{ form.status.id_for_label }}" class="form-label">Status</label>
     {{ form.status }}
     {% if form.status.errors %}<div class="text-danger">{{ form.status.errors|striptags }}</div>{% endif %}
   </div>
 
   <div class="mb-3">
-    <label for="{{ form.executor.id_for_label }}" class="form-label">Исполнитель</label>
+    <label for="{{ form.executor.id_for_label }}" class="form-label">Executor</label>
     {{ form.executor }}
     {% if form.executor.errors %}<div class="text-danger">{{ form.executor.errors|striptags }}</div>{% endif %}
   </div>
 
   <div class="mb-3">
-    <label for="id_labels" class="form-label">Метки</label>
+    <label for="id_labels" class="form-label">Labels</label>
     {{ form.labels }}
-  <div class="form-text">Можно выбрать несколько (Ctrl/⌘ + клик).</div>
+    <div class="form-text">You can select multiple (Ctrl/⌘ + click).</div>
   </div>
 
 <button type="submit" class="btn btn-primary">
-  {% if object %}Изменить{% else %}Создать{% endif %}
-</button>  <a href="{% url 'tasks:index' %}" class="btn btn-link">Отмена</a>
+  {% if object %}Update{% else %}Create{% endif %}
+</button>  <a href="{% url 'tasks:index' %}" class="btn btn-link">Cancel</a>
 </form>
 
 {% endblock %}

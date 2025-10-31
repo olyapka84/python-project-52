@@ -6,13 +6,13 @@ User = get_user_model()
 
 class CustomUserCreationForm(UserCreationForm):
     first_name = forms.CharField(
-        label='Имя',
+        label='First name',
         max_length=150,
         required=True,
         widget=forms.TextInput(attrs={'class': 'form-control'}),
     )
     last_name = forms.CharField(
-        label='Фамилия',
+        label='Last name',
         max_length=150,
         required=False,
         widget=forms.TextInput(attrs={'class': 'form-control'}),
@@ -23,21 +23,21 @@ class CustomUserCreationForm(UserCreationForm):
         fields = ('username', 'first_name',
                   'last_name', 'password1', 'password2')
         labels = {
-            'username': 'Имя пользователя',
-            'password1': 'Пароль',
-            'password2': 'Подтверждение пароля',
+            'username': 'Username',
+            'password1': 'Password',
+            'password2': 'Password confirmation',
         }
         help_texts = {
             'username': (
-                'Не более 150 символов.'
-                'Допустимы буквы, цифры и символы: @/./+/-/_.'
+                'No more than 150 characters. '
+                'Letters, digits and @/./+/-/_ characters only.'
             ),
             'password1': (
-                'Пароль должен содержать минимум 8 символов'
-                'и не быть слишком простым.'
+                'Password must contain at least 8 characters '
+                'and not be too simple.'
             ),
             'password2': (
-                'Для подтверждения введите, пожалуйста, пароль ещё раз.'
+                'Please enter the password again for confirmation.'
             ),
         }
         widgets = {
@@ -50,7 +50,7 @@ class CustomUserCreationForm(UserCreationForm):
 class CustomAuthenticationForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['username'].label = 'Имя пользователя'
-        self.fields['password'].label = 'Пароль'
+        self.fields['username'].label = 'Username'
+        self.fields['password'].label = 'Password'
         for field in self.fields.values():
             field.widget.attrs.update({'class': 'form-control'})

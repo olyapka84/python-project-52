@@ -1,20 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>{% if object %}Изменить статус{% else %}Создать статус{% endif %}</h1>
+<h1>{% if object %}Edit status{% else %}Create status{% endif %}</h1>
 
 <form method="post">
   {% csrf_token %}
   {{ form.non_field_errors }}
   <div class="mb-3">
-    <label for="{{ form.name.id_for_label }}" class="form-label">Имя</label>
+    <label for="{{ form.name.id_for_label }}" class="form-label">Name</label>
     {{ form.name }}
     {% if form.name.errors %}
       <div class="text-danger">{{ form.name.errors|striptags }}</div>
     {% endif %}
   </div>
 <button type="submit" class="btn btn-primary">
-  {% if object %}Изменить{% else %}Создать{% endif %}
+  {% if object %}Update{% else %}Create{% endif %}
 </button>
-  <a href="{% url 'statuses:index' %}" class="btn btn-link">Отмена</a>
+  <a href="{% url 'statuses:index' %}" class="btn btn-link">Cancel</a>
 </form>
 {% endblock %}

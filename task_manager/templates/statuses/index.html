@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Статусы</h1>
+<h1>Statuses</h1>
 
-<p><a class="btn btn-primary" href="{% url 'statuses:create' %}">Создать статус</a></p>
+<p><a class="btn btn-primary" href="{% url 'statuses:create' %}">Create status</a></p>
 
 <table class="table table-striped align-middle">
   <thead>
     <tr>
       <th>ID</th>
-      <th>Название</th>
-      <th>Дата создания</th>
+      <th>Name</th>
+      <th>Created at</th>
       <th></th>
     </tr>
   </thead>
@@ -20,12 +20,12 @@
       <td>{{ st.name }}</td>
       <td>{{ st.created_at|date:"d.m.Y H:i" }}</td>
       <td class="text-end">
-        <a class="btn btn-sm btn-outline-secondary" href="{% url 'statuses:update' st.pk %}">Изменить</a>
-        <a class="btn btn-sm btn-outline-danger" href="{% url 'statuses:delete' st.pk %}">Удалить</a>
+        <a class="btn btn-sm btn-outline-secondary" href="{% url 'statuses:update' st.pk %}">Update</a>
+        <a class="btn btn-sm btn-outline-danger" href="{% url 'statuses:delete' st.pk %}">Delete</a>
       </td>
     </tr>
   {% empty %}
-    <tr><td colspan="4">Пока нет статусов.</td></tr>
+    <tr><td colspan="4">No statuses yet.</td></tr>
   {% endfor %}
   </tbody>
 </table>

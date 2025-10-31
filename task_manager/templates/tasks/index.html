@@ -1,22 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Задачи</h1>
+<h1>Tasks</h1>
 
-<p><a class="btn btn-primary" href="{% url 'tasks:create' %}">Создать задачу</a></p>
+<p><a class="btn btn-primary" href="{% url 'tasks:create' %}">Create task</a></p>
 
 <form method="get" class="row g-2 align-items-end mb-3">
   <div class="col-sm-3">
-    <label for="id_status" class="form-label">Статус</label>
+    <label for="id_status" class="form-label">Status</label>
     {{ filter.form.status }}
   </div>
 
   <div class="col-sm-3">
-    <label for="id_executor" class="form-label">Исполнитель</label>
+    <label for="id_executor" class="form-label">Executor</label>
     {{ filter.form.executor }}
   </div>
 
   <div class="col-sm-3">
-    <label for="id_label" class="form-label">Метка</label>
+    <label for="id_label" class="form-label">Label</label>
     {{ filter.form.label }}
   </div>
 
@@ -24,13 +24,13 @@
     <div class="form-check mt-4">
       {{ filter.form.self_tasks }}
       <label class="form-check-label" for="{{ filter.form.self_tasks.id_for_label }}">
-        Только свои задачи
+        Only my tasks
       </label>
     </div>
   </div>
 
   <div class="col-12">
-    <button type="submit" class="btn btn-primary">Показать</button>
+    <button type="submit" class="btn btn-primary">Show</button>
   </div>
 </form>
 
@@ -38,11 +38,11 @@
   <thead>
     <tr>
       <th>ID</th>
-      <th>Имя</th>
-      <th>Статус</th>
-      <th>Автор</th>
-      <th>Исполнитель</th>
-      <th>Дата создания</th>
+      <th>Name</th>
+      <th>Status</th>
+      <th>Author</th>
+      <th>Executor</th>
+      <th>Created at</th>
       <th></th>
     </tr>
   </thead>
@@ -62,12 +62,12 @@
       </td>
       <td>{{ t.created_at|date:"d.m.Y H:i" }}</td>
       <td class="text-end">
-        <a class="btn btn-sm btn-outline-secondary" href="{% url 'tasks:update' t.pk %}">Изменить</a>
-        <a class="btn btn-sm btn-outline-danger" href="{% url 'tasks:delete' t.pk %}">Удалить</a>
+        <a class="btn btn-sm btn-outline-secondary" href="{% url 'tasks:update' t.pk %}">Update</a>
+        <a class="btn btn-sm btn-outline-danger" href="{% url 'tasks:delete' t.pk %}">Delete</a>
       </td>
     </tr>
   {% empty %}
-    <tr><td colspan="7">Пока нет задач.</td></tr>
+    <tr><td colspan="7">No tasks yet.</td></tr>
   {% endfor %}
   </tbody>
 </table>

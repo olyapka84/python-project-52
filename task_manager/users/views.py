@@ -27,11 +27,11 @@ class OnlySelfMixin(UserPassesTestMixin):
 
     def handle_no_permission(self):
         if not self.request.user.is_authenticated:
-            messages.error(self.request, 
-                           "Вы не авторизованы! Пожалуйста, выполните вход.")
+            messages.error(self.request,
+                           "You are not authorized! Please log in.")
             return super().handle_no_permission()
-        messages.error(self.request, 
-                       "У вас нет прав для изменения другого пользователя.")
+        messages.error(self.request,
+                       "You do not have permission to modify another user.")
         return redirect("users:list")
 
 
@@ -42,7 +42,7 @@ class UserCreateView(CreateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, "Пользователь успешно зарегистрирован")
+        messages.success(self.request, "User registered successfully")
         return response
 
 
@@ -58,16 +58,16 @@ class UserUpdateView(OnlySelfMixin, UpdateView):
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.fields["password1"] = forms.CharField(
-            label="Пароль",
+            label="Password",
             required=False,
             widget=forms.PasswordInput(attrs={"class": "form-control"}),
             help_text=password_validation.password_validators_help_text_html(),
         )
         form.fields["password2"] = forms.CharField(
-            label="Подтверждение пароля",
+            label="Password confirmation",
             required=False,
             widget=forms.PasswordInput(attrs={"class": "form-control"}),
-            help_text="Для подтверждения введите, пожалуйста, пароль ещё раз.",
+            help_text="Please enter the password again for confirmation.",
         )
         return form
 
@@ -76,16 +76,16 @@ class UserUpdateView(OnlySelfMixin, UpdateView):
         p2 = form.cleaned_data.get("password2")
         if p1 or p2:
             if not p1 or not p2:
-                form.add_error("password2", 
-                               "Пожалуйста, введите пароль дважды.")
+                form.add_error("password2",
+                               "Please enter the password twice.")
                 return self.form_invalid(form)
             if p1 != p2:
-                form.add_error("password2", "Введённые пароли не совпадают.")
+                form.add_error("password2", "The entered passwords do not match.")
                 return self.form_invalid(form)
             password_validation.validate_password(p1, self.object)
             form.instance.set_password(p1)
         response = super().form_valid(form)
-        messages.success(self.request, "Пользователь успешно изменен")
+        messages.success(self.request, "User updated successfully")
         return response
 
 
@@ -99,11 +99,10 @@ class UserDeleteView(OnlySelfMixin, LoginRequiredMixin, DeleteView):
         user = self.get_object()
         if (hasattr(user, "created_tasks") and user.created_tasks.exists()) or \
            (hasattr(user, "executed_tasks") and user.executed_tasks.exists()):
-            messages.error(request, 
-                           "Невозможно удалить пользователя, "
-                           "потому что он используется")
+            messages.error(request,
+                           "Cannot delete user because they are in use")
             return redirect("users:list")
-        messages.success(request, "Пользователь успешно удален")
+        messages.success(request, "User deleted successfully")
         return super().post(request, *args, **kwargs)
 
 
@@ -113,14 +112,14 @@ class UserLoginView(LoginView):
     next_page = reverse_lazy("home")
 
     def form_valid(self, form):
-        messages.success(self.request, "Вы залогинены")
+        messages.success(self.request, "You are logged in")
         return super().form_valid(form)
 
 
 class UserLogoutView(View):
     def post(self, request, *args, **kwargs):
         logout(request)
-        messages.success(request, "Вы разлогинены")
+        messages.success(request, "You are logged out")
         return redirect("home")
 
     def get(self, request, *args, **kwargs):

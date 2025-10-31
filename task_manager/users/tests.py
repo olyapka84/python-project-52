@@ -10,7 +10,7 @@ User = get_user_model()
 
 @pytest.fixture
 def status_new(db):
-    return Status.objects.create(name="новый")
+    return Status.objects.create(name="new")
 
 
 @pytest.fixture
@@ -131,7 +131,7 @@ def test_user_cannot_delete_other(auth_client, users):
 @pytest.mark.django_db
 def test_only_author_can_delete(auth_client, users, status_new):
     t = Task.objects.create(
-        name="Чужая задача",
+        name="Someone else's task",
         description="...",
         status=status_new,
         author=users["bob"],
@@ -150,8 +150,8 @@ def test_only_author_can_delete(auth_client, users, status_new):
 @pytest.mark.django_db
 def test_user_with_tasks_cannot_be_deleted(users, status_new):
     Task.objects.create(
-        name="Тестовая",
-        description="Проверка",
+        name="Test",
+        description="Check",
         status=status_new,
         author=users["bob"],
     )
