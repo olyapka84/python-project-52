@@ -1,5 +1,3 @@
-import secrets
-
 import pytest
 from django.contrib.auth import get_user_model
 from django.test import Client
@@ -10,27 +8,23 @@ from task_manager.statuses.models import Status
 User = get_user_model()
 
 
+TEST_PASSWORD = "test-password-123!Aa"  # pragma: allowlist secret
+
+
 @pytest.fixture
 def status_new(db):
     return Status.objects.create(name="new")
 
 
-def _make_test_password(label: str) -> str:
-    """Generate a unique, complex password for tests without hardcoding secrets."""
-
-    return f"{label}-{secrets.token_urlsafe(8)}!Aa1"
-
-
 @pytest.fixture
 def users(db):
-    password = _make_test_password("user")
     u1 = User.objects.create_user(
-        username="alice", password=password, first_name="Alice", last_name="A"
+        username="alice", password=TEST_PASSWORD, first_name="Alice", last_name="A"
     )
     u2 = User.objects.create_user(
-        username="bob", password=password, first_name="Bob", last_name="B"
+        username="bob", password=TEST_PASSWORD, first_name="Bob", last_name="B"
     )
-    return {"alice": u1, "bob": u2, "plain_password": password}
+    return {"alice": u1, "bob": u2, "plain_password": TEST_PASSWORD}
 
 
 @pytest.fixture
@@ -93,13 +87,12 @@ def test_logout_view_logs_user_out(auth_client):
 
 @pytest.mark.django_db
 def test_registration_post_creates_user(client):
-    password = _make_test_password("register")
     data = {
         "username": "charlie",
         "first_name": "Charlie",
         "last_name": "C",
-        "password1": password,
-        "password2": password,
+        "password1": TEST_PASSWORD,
+        "password2": TEST_PASSWORD,
     }
     r = client.post(reverse("users:create"), data=data)
     assert r.status_code in (302, 301)
@@ -139,7 +132,7 @@ def test_user_can_update_self(auth_client, users):
 @pytest.mark.django_db
 def test_user_can_update_password(auth_client, users):
     url = reverse("users:update", args=[users["alice"].pk])
-    new_password = _make_test_password("updated")
+    new_password = "updated-password-123!Aa"  # pragma: allowlist secret
     response = auth_client.post(
         url,
         data={
@@ -163,7 +156,7 @@ def test_user_can_update_password(auth_client, users):
 @pytest.mark.django_db
 def test_user_update_requires_both_password_fields(auth_client, users):
     url = reverse("users:update", args=[users["alice"].pk])
-    password_one = _make_test_password("only-once")
+    password_one = "only-once-password-123!Aa"  # pragma: allowlist secret
     response = auth_client.post(
         url,
         data={
@@ -183,8 +176,8 @@ def test_user_update_requires_both_password_fields(auth_client, users):
 @pytest.mark.django_db
 def test_user_update_password_mismatch(auth_client, users):
     url = reverse("users:update", args=[users["alice"].pk])
-    first_password = _make_test_password("mismatch-1")
-    second_password = _make_test_password("mismatch-2")
+    first_password = "mismatch-password-1-123!Aa"  # pragma: allowlist secret
+    second_password = "mismatch-password-2-123!Aa"  # pragma: allowlist secret
     response = auth_client.post(
         url,
         data={
@@ -251,7 +244,7 @@ def test_only_author_can_delete(auth_client, users, status_new):
     assert Task.objects.filter(pk=t.pk).exists()
 
     c = Client()
-    c.login(username="bob", password=users["password"])
+    c.login(username="bob", password=users["plain_password"])
     r2 = c.post(reverse("tasks:delete", args=[t.pk]))
     assert r2.status_code in (302, 301)
     assert not Task.objects.filter(pk=t.pk).exists()
