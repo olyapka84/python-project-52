@@ -17,11 +17,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='label',
             name='created_at',
-            field=models.DateTimeField(auto_now_add=True, verbose_name='Дата создания'),
+            field=models.DateTimeField(auto_now_add=True, verbose_name='Created at'),
         ),
         migrations.AlterField(
             model_name='label',
             name='name',
-            field=models.CharField(max_length=100, unique=True, verbose_name='Имя'),
+            field=models.CharField(max_length=100, unique=True, verbose_name='Name'),
         ),
     ]

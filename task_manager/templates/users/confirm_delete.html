@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% block title %}Удаление пользователя{% endblock %}
+{% block title %}Delete user{% endblock %}
 
 {% block content %}
-  <h1>Удаление пользователя</h1>
-  <p>Точно удалить «{{ object.username }}»?</p>
+  <h1>Delete user</h1>
+  <p>Are you sure you want to delete “{{ object.username }}”?</p>
   <form method="post">
     {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Да, удалить</button>
-    <a href="{% url 'users:list' %}" class="btn btn-link">Отмена</a>
+    <button type="submit" class="btn btn-danger">Yes, delete</button>
+    <a href="{% url 'users:list' %}" class="btn btn-link">Cancel</a>
   </form>
 {% endblock %}

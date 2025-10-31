@@ -1,18 +1,18 @@
 {% load django_bootstrap5 %}
 
 <!doctype html>
-<html lang="ru">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}Менеджер Задач{% endblock %}</title>
+    <title>{% block title %}Task Manager{% endblock %}</title>
     {% bootstrap_css %}
     {% bootstrap_javascript %}
   </head>
   <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
       <div class="container-fluid">
-        <a class="navbar-brand" href="/">Менеджер Задач</a>
+        <a class="navbar-brand" href="/">Task Manager</a>
         <div>
           <ul class="navbar-nav me-auto mb-2 mb-md-0 align-items-center">
             {% if user.is_authenticated %}
@@ -20,32 +20,32 @@
                 <form method="post" action="{% url 'logout' %}" class="d-inline m-0">
                   {% csrf_token %}
                   <button type="submit" class="btn btn-link nav-link px-2 py-2">
-                    Выход
+                    Log out
                   </button>
                 </form>
               </li>
             {% else %}
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'login' %}">Вход</a>
+                <a class="nav-link" href="{% url 'login' %}">Log in</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'users:create' %}">Регистрация</a>
+                <a class="nav-link" href="{% url 'users:create' %}">Sign up</a>
               </li>
             {% endif %}
 
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'users:list' %}">Пользователи</a>
+              <a class="nav-link" href="{% url 'users:list' %}">Users</a>
             </li>
 
             {% if user.is_authenticated %}
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'statuses:index' %}">Статусы</a>
+                <a class="nav-link" href="{% url 'statuses:index' %}">Statuses</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'tasks:index' %}">Задачи</a>
+                <a class="nav-link" href="{% url 'tasks:index' %}">Tasks</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'labels:index' %}">Метки</a>
+                <a class="nav-link" href="{% url 'labels:index' %}">Labels</a>
               </li>
             {% endif %}
           </ul>

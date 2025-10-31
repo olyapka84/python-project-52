@@ -6,7 +6,7 @@ class StatusForm(forms.ModelForm):
     class Meta:
         model = Status
         fields = ["name"]
-        labels = {"name": "Имя"}
+        labels = {"name": "Name"}
         widgets = {
             "name": forms.TextInput(attrs={"class": "form-control"}),
         }

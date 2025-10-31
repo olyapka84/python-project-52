@@ -1,20 +1,20 @@
 {% extends "base.html" %}
-{% block title %}Вход{% endblock %}
+{% block title %}Log in{% endblock %}
 
 {% block content %}
-  <h1 class="mb-4">Вход</h1>
+  <h1 class="mb-4">Log in</h1>
   <form method="post" action="{% url 'login' %}" class="w-100" style="max-width: 420px;">
     {% csrf_token %}
     {{ form.non_field_errors }}
 
     <div class="mb-3">
-      <label for="id_username" class="form-label">Имя пользователя</label>
+      <label for="id_username" class="form-label">Username</label>
       <input
         type="text"
         name="{{ form.username.name }}"
         id="id_username"
         class="form-control"
-        placeholder="Имя пользователя"
+        placeholder="Username"
         value="{{ form.username.value|default_if_none:'' }}"
         required
       >
@@ -22,18 +22,18 @@
     </div>
 
     <div class="mb-3">
-      <label for="id_password" class="form-label">Пароль</label>
+      <label for="id_password" class="form-label">Password</label>
       <input
         type="password"
         name="{{ form.password.name }}"
         id="id_password"
         class="form-control"
-        placeholder="Пароль"
+        placeholder="Password"
         required
       >
       {{ form.password.errors }}
     </div>
 
-    <button type="submit" class="btn btn-primary">Войти</button>
+    <button type="submit" class="btn btn-primary">Log in</button>
   </form>
 {% endblock %}

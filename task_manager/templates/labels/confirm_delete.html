@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="mb-3">Удалить метку</h1>
+<h1 class="mb-3">Delete label</h1>
 
-<p>Вы уверены, что хотите удалить метку <strong>{{ object.name }}</strong>?</p>
+<p>Are you sure you want to delete the label <strong>{{ object.name }}</strong>?</p>
 
 <form method="post">
   {% csrf_token %}
-  <button type="submit" class="btn btn-danger">Да, удалить</button>
-  <a href="{% url 'labels:index' %}" class="btn btn-secondary">Отмена</a>
+  <button type="submit" class="btn btn-danger">Yes, delete</button>
+  <a href="{% url 'labels:index' %}" class="btn btn-secondary">Cancel</a>
 </form>
 {% endblock %}
