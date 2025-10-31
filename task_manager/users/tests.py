@@ -1,3 +1,5 @@
+import secrets
+
 import pytest
 from django.contrib.auth import get_user_model
 from django.test import Client
@@ -13,22 +15,28 @@ def status_new(db):
     return Status.objects.create(name="new")
 
 
+def _make_test_password(label: str) -> str:
+    """Generate a unique, complex password for tests without hardcoding secrets."""
+
+    return f"{label}-{secrets.token_urlsafe(8)}!Aa1"
+
+
 @pytest.fixture
 def users(db):
-    password = "user-pass-for-tests"
+    password = _make_test_password("user")
     u1 = User.objects.create_user(
         username="alice", password=password, first_name="Alice", last_name="A"
     )
     u2 = User.objects.create_user(
         username="bob", password=password, first_name="Bob", last_name="B"
     )
-    return {"alice": u1, "bob": u2, "password": password}
+    return {"alice": u1, "bob": u2, "plain_password": password}
 
 
 @pytest.fixture
 def auth_client(users):
     c = Client()
-    c.login(username="alice", password=users["password"])
+    c.login(username="alice", password=users["plain_password"])
     return c
 
 
@@ -85,12 +93,13 @@ def test_logout_view_logs_user_out(auth_client):
 
 @pytest.mark.django_db
 def test_registration_post_creates_user(client):
+    password = _make_test_password("register")
     data = {
         "username": "charlie",
         "first_name": "Charlie",
         "last_name": "C",
-        "password1": "test-pass-123!",
-        "password2": "test-pass-123!",
+        "password1": password,
+        "password2": password,
     }
     r = client.post(reverse("users:create"), data=data)
     assert r.status_code in (302, 301)
@@ -130,7 +139,7 @@ def test_user_can_update_self(auth_client, users):
 @pytest.mark.django_db
 def test_user_can_update_password(auth_client, users):
     url = reverse("users:update", args=[users["alice"].pk])
-    new_password = "strong-pass-for-tests!1"
+    new_password = _make_test_password("updated")
     response = auth_client.post(
         url,
         data={
@@ -154,13 +163,14 @@ def test_user_can_update_password(auth_client, users):
 @pytest.mark.django_db
 def test_user_update_requires_both_password_fields(auth_client, users):
     url = reverse("users:update", args=[users["alice"].pk])
+    password_one = _make_test_password("only-once")
     response = auth_client.post(
         url,
         data={
             "username": "alice",
             "first_name": "Alice",
             "last_name": "A",
-            "password1": "OnlyOnce!",
+            "password1": password_one,
             "password2": "",
         },
     )
@@ -173,14 +183,16 @@ def test_user_update_requires_both_password_fields(auth_client, users):
 @pytest.mark.django_db
 def test_user_update_password_mismatch(auth_client, users):
     url = reverse("users:update", args=[users["alice"].pk])
+    first_password = _make_test_password("mismatch-1")
+    second_password = _make_test_password("mismatch-2")
     response = auth_client.post(
         url,
         data={
             "username": "alice",
             "first_name": "Alice",
             "last_name": "A",
-            "password1": "MismatchPass!1",
-            "password2": "MismatchPass!2",
+            "password1": first_password,
+            "password2": second_password,
         },
     )
 
@@ -209,7 +221,7 @@ def test_delete_requires_auth_redirects(client, users):
 @pytest.mark.django_db
 def test_user_can_delete_self(users):
     c = Client()
-    c.login(username="bob", password=users["password"])
+    c.login(username="bob", password=users["plain_password"])
     url = reverse("users:delete", args=[users["bob"].pk])
     r_get = c.get(url)
     assert r_get.status_code == 200
@@ -255,7 +267,7 @@ def test_user_with_tasks_cannot_be_deleted(users, status_new):
     )
 
     c = Client()
-    c.login(username="bob", password=users["password"])
+    c.login(username="bob", password=users["plain_password"])
     url = reverse("users:delete", args=[users["bob"].pk])
     r = c.post(url)
     assert r.status_code in (302, 301)
