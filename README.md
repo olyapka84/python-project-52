@@ -38,7 +38,7 @@ It’s a simple but fully functional project management tool created as the fina
 
 Clone the repository and install dependencies with uv:
 
-- git clone https://github.com/olyapka84/python-project-52.git
+- git clone
 - cd python-project-52
 - uv sync
 
