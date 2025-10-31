@@ -130,38 +130,36 @@ def test_user_can_update_self(auth_client, users):
 @pytest.mark.django_db
 def test_user_can_update_password(auth_client, users):
     url = reverse("users:update", args=[users["alice"].pk])
-    new_password = "Newpass456"
     response = auth_client.post(
         url,
         data={
             "username": "alice",
             "first_name": "Alice",
             "last_name": "A",
-            "password1": new_password,
-            "password2": new_password,
+            "password1": "Newpass456",
+            "password2": "Newpass456",
         },
     )
 
     assert response.status_code in (302, 301)
 
     users["alice"].refresh_from_db()
-    assert users["alice"].check_password(new_password)
+    assert users["alice"].check_password("Newpass456")
 
     fresh_client = Client()
-    assert fresh_client.login(username="alice", password=new_password)
+    assert fresh_client.login(username="alice", password="Newpass456")
 
 
 @pytest.mark.django_db
 def test_user_update_requires_both_password_fields(auth_client, users):
     url = reverse("users:update", args=[users["alice"].pk])
-    password_one = "SinglePass789"
     response = auth_client.post(
         url,
         data={
             "username": "alice",
             "first_name": "Alice",
             "last_name": "A",
-            "password1": password_one,
+            "password1": "SinglePass789",
             "password2": "",
         },
     )
@@ -174,16 +172,14 @@ def test_user_update_requires_both_password_fields(auth_client, users):
 @pytest.mark.django_db
 def test_user_update_password_mismatch(auth_client, users):
     url = reverse("users:update", args=[users["alice"].pk])
-    first_password = "Mismatch111"
-    second_password = "Mismatch222"
     response = auth_client.post(
         url,
         data={
             "username": "alice",
             "first_name": "Alice",
             "last_name": "A",
-            "password1": first_password,
-            "password2": second_password,
+            "password1": "Mismatch111",
+            "password2": "Mismatch222",
         },
     )
 
