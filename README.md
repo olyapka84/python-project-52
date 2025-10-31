@@ -38,8 +38,8 @@ It’s a simple but fully functional project management tool created as the fina
 
 Clone the repository and install dependencies with uv:
 
-- git clone
-- cd python-project-52
+- git clone https://github.com/Olyapka84/task-manager-trainee-django-project.git
+- cd task-manager-trainee-django-project
 - uv sync
 
 Create a .env file in the project root:
