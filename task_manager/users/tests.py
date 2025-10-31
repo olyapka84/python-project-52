@@ -78,7 +78,6 @@ def test_logout_view_logs_user_out(auth_client):
     response = auth_client.post(reverse("logout"))
     assert response.status_code in (302, 301)
 
-    # The logout view should end the session, so following requests must be anonymous
     follow_up = auth_client.get(reverse("home"))
     assert follow_up.wsgi_request.user.is_anonymous
 
@@ -130,7 +129,8 @@ def test_user_can_update_self(auth_client, users):
 @pytest.mark.django_db
 def test_user_can_update_password(auth_client, users):
     url = reverse("users:update", args=[users["alice"].pk])
-    new_password = "Newpass456"
+    new_password = "Secur3Pass!234"
+
     response = auth_client.post(
         url,
         data={
@@ -154,14 +154,14 @@ def test_user_can_update_password(auth_client, users):
 @pytest.mark.django_db
 def test_user_update_requires_both_password_fields(auth_client, users):
     url = reverse("users:update", args=[users["alice"].pk])
-    password_one = "SinglePass789"
+
     response = auth_client.post(
         url,
         data={
             "username": "alice",
             "first_name": "Alice",
             "last_name": "A",
-            "password1": password_one,
+            "password1": "OnlyOnce123!",
             "password2": "",
         },
     )
@@ -174,16 +174,15 @@ def test_user_update_requires_both_password_fields(auth_client, users):
 @pytest.mark.django_db
 def test_user_update_password_mismatch(auth_client, users):
     url = reverse("users:update", args=[users["alice"].pk])
-    first_password = "Mismatch111"
-    second_password = "Mismatch222"
+
     response = auth_client.post(
         url,
         data={
             "username": "alice",
             "first_name": "Alice",
             "last_name": "A",
-            "password1": first_password,
-            "password2": second_password,
+            "password1": "Mismatch123!",
+            "password2": "Mismatch321!",
         },
     )
 
