@@ -12,13 +12,6 @@ It’s a simple but fully functional project management tool created as the fina
 
 ---
 
-## Demo
-
-Deployed on Render:  
-https://python-project-52-76f1.onrender.com/
-
----
-
 ## Features
 
 - User registration and authentication  
